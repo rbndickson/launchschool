@@ -2,8 +2,16 @@ def prompt(message)
   puts("=> #{message}")
 end
 
-def valid_number?(number)
-  ! number.match(/\D/)
+def integer?(input)
+  input.to_i.to_s == input
+end
+
+def float?(input)
+  input.to_f.to_s == input
+end
+
+def number?(input)
+  integer?(input) || float?(input)
 end
 
 def operation_to_message(operation)
@@ -35,7 +43,7 @@ loop do
     prompt("What's the first number?")
     number_1 = gets.chomp
 
-    if valid_number?(number_1)
+    if number?(number_1)
       break
     else
       prompt('Number is invalid, please try again!')
@@ -47,7 +55,7 @@ loop do
     prompt("What's the second number?")
     number_2 = gets.chomp
 
-    if valid_number?(number_2)
+    if number?(number_2)
       break
     else
       prompt('Number is invalid, please try again!')
@@ -78,9 +86,9 @@ loop do
   prompt("#{operation_to_message(operator)} the two numbers...")
 
   result =  case operator
-            when '1' then number_1.to_i + number_2.to_i
-            when '2' then number_1.to_i - number_2.to_i
-            when '3' then number_1.to_i * number_2.to_i
+            when '1' then number_1.to_f + number_2.to_f
+            when '2' then number_1.to_f - number_2.to_f
+            when '3' then number_1.to_f * number_2.to_f
             else number_1.to_f / number_2.to_f
             end
 
