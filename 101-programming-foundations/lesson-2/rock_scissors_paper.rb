@@ -1,6 +1,6 @@
 CHOICES = { 'r' => 'rock', 's' => 'scissors', 'p' => 'paper' }
 SYMBOLS = { 'r' => "\xe2\x9c\x8a",
-            's' => "\xe2\x9c\x8c",
+            's' => "\xe2\x9c\x8c\xef\xb8\x8f",
             'p' => "\xe2\x9c\x8b" }
 
 def say_then_pause(message)
