@@ -30,7 +30,6 @@ WINNING_COMBINATIONS = {
  [:sp, :s] => 'Spock smashes Scissors'
 }
 
-
 def say(message)
   puts message
   sleep 1
@@ -41,6 +40,43 @@ def opponent_says(message, opponent)
   sleep 1
 end
 
+def calculate_result(player_choice, opponent_choice)
+  if player_choice == opponent_choice
+    :draw
+  elsif WINNING_COMBINATIONS.include?([player_choice, opponent_choice])
+    :player_win
+  else
+    :computer_win
+  end
+end
+
+def announce(opponent, result, player_choice, opponent_choice)
+  case result
+  when :draw
+    say "It's a draw!"
+  when :player_win
+    say WINNING_COMBINATIONS[[player_choice, opponent_choice]]
+    say 'You win!'
+  else
+    say WINNING_COMBINATIONS[[opponent_choice, player_choice]]
+    say "#{opponent}  wins!"
+  end
+end
+
+def update_score(score, result)
+  case result
+  when :draw
+    score[:player] += 1
+    score[:computer] += 1
+  when :player_win
+    score[:player] += 1
+  else
+    score[:computer] += 1
+  end
+end
+
+score = { player: 0, computer: 0 }
+
 loop do
   opponent = OPPONENTS.sample
 
@@ -49,7 +85,6 @@ loop do
 
   choices = 'Rock (r), Scissors (s), Paper (p) Lizard (l) or Spock (sp)'
   opponent_says("Choose #{choices}.", opponent)
-
   player_choice = gets.chomp.downcase.to_sym
 
   until CHOICES.has_key?(player_choice)
@@ -58,22 +93,16 @@ loop do
   end
 
   opponent_choice = CHOICES.keys.sample
-  sleep 1
 
   say '1 2 3 Go!'
-
   say "You throw #{CHOICES[player_choice]} #{EMOJI[player_choice]}"
   say "#{opponent}  throws #{CHOICES[opponent_choice]} #{EMOJI[opponent_choice]}"
 
-  if player_choice == opponent_choice
-    say "It's a draw!"
-  elsif WINNING_COMBINATIONS.include?([player_choice, opponent_choice])
-    say WINNING_COMBINATIONS[[player_choice, opponent_choice]]
-    say 'You win!'
-  else
-    say WINNING_COMBINATIONS[[opponent_choice, player_choice]]
-    say "#{opponent}  wins!"
-  end
+  result = calculate_result(player_choice, opponent_choice)
+  announce(opponent, result, player_choice, opponent_choice)
+  update_score(score, result)
+
+  say "Player #{score[:player]} - Challengers #{score[:computer]}"
 
   puts 'Try again? (y/n)'
   break if gets.chomp.downcase != 'y'
