@@ -27,12 +27,8 @@ prompt('Welcome to Calculator! Enter your name:')
 name = ''
 loop do
   name = gets.chomp
-
-  if name.empty?
-    prompt('Please use a valid name')
-  else
-    break
-  end
+  break unless name.empty?
+  prompt('Please use a valid name')
 end
 
 prompt("Hi #{name}!")
@@ -42,24 +38,16 @@ loop do
   loop do
     prompt("What's the first number?")
     number_1 = gets.chomp
-
-    if number?(number_1)
-      break
-    else
-      prompt('Number is invalid, please try again!')
-    end
+    break if number?(number_1)
+    prompt('Number is invalid, please try again!')
   end
 
   number_2 = ''
   loop do
     prompt("What's the second number?")
     number_2 = gets.chomp
-
-    if number?(number_2)
-      break
-    else
-      prompt('Number is invalid, please try again!')
-    end
+    break if number?(number_2)
+    prompt('Number is invalid, please try again!')
   end
 
   operator_prompt = <<-MSG
@@ -75,12 +63,8 @@ loop do
   operator = ''
   loop do
     operator = gets.chomp
-
-    if %w(1 2 3 4).include?(operator)
-      break
-    else
-      prompt('Please enter 1, 2, 3 or 4')
-    end
+    break if %w(1 2 3 4).include?(operator)
+    prompt('Please enter 1, 2, 3 or 4')
   end
 
   prompt("#{operation_to_message(operator)} the two numbers...")
