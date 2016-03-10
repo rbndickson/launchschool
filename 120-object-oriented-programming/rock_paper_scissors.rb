@@ -59,6 +59,10 @@ class Player
   def move_name
     move.name
   end
+
+  def match_winner?
+    score == RPSMatch::FIRST_TO
+  end
 end
 
 class Human < Player
@@ -141,6 +145,8 @@ class Game
 end
 
 class RPSMatch
+  FIRST_TO = 3.freeze
+
   attr_accessor :human, :computer
 
   def initialize
@@ -149,7 +155,8 @@ class RPSMatch
   end
 
   def display_welcome_message
-    puts 'Welcome to Rock, Paper, Scissors!'
+    puts 'Welcome to Rock, Paper, Scissors'
+    puts "The first player to #{FIRST_TO} is the winner!"
   end
 
   def display_goodbye_message
@@ -158,6 +165,18 @@ class RPSMatch
 
   def display_score
     puts "#{human.name} #{human.score} - #{computer.score} #{computer.name}"
+  end
+
+  def winner
+    [human, computer].select { |player| player.match_winner? }.first
+  end
+
+  def display_winning_message
+    puts "#{winner.name} has won the match!"
+  end
+
+  def reset_scores
+    [human, computer].each { |player| player.score = 0 }
   end
 
   def play_again?
@@ -179,7 +198,11 @@ class RPSMatch
     loop do
       Game.new(human, computer).play
       display_score
-      break unless play_again?
+      if winner
+        display_winning_message
+        reset_scores
+        break unless play_again?
+      end
     end
 
     display_goodbye_message
