@@ -49,10 +49,11 @@ class Paper < Move
 end
 
 class Player
-  attr_accessor :move, :name, :score, :move_history
+  attr_accessor :move, :name, :move_weights, :score, :move_history
 
   def initialize
     set_name
+    @move_weights = { 'rock' => 10, 'paper' => 10, 'scissors' => 10 }
     @score = 0
     @move_history = []
   end
@@ -62,7 +63,7 @@ class Player
   end
 
   def move_history_display
-    output = move_history.inject('') { |str, move| str + move + ', '  }
+    output = move_history.inject('') { |str, move| str + move + ', ' }
     output[0..-3] + '.'
   end
 
@@ -105,7 +106,14 @@ class Computer < Player
   end
 
   def choose
-    self.move = MoveCreator.new(Move::RULES.keys.sample).create
+    weighted_choices = move_weights.to_a.map { |e| [e[0]] * e[1] }.flatten
+    self.move = MoveCreator.new(weighted_choices.sample).create
+  end
+
+  def update_move_weights(human_move)
+    move_weights[Move::RULES[human_move.name][:loses_to]] += 2
+    move_weights[human_move.name] -= 1
+    move_weights[Move::RULES[human_move.name][:wins_against]] -= 1
   end
 end
 
@@ -119,12 +127,13 @@ class Game
   end
 
   def play
-    human.choose
+    human_move = human.choose
     computer.choose
     display_moves
     @winner = calculate_winner
     update_score
     update_move_histories
+    computer.update_move_weights(human_move)
     display_winner
   end
 
@@ -156,7 +165,7 @@ class Game
 end
 
 class RPSMatch
-  FIRST_TO = 3.freeze
+  FIRST_TO = 3
 
   attr_accessor :human, :computer
 
@@ -179,7 +188,7 @@ class RPSMatch
   end
 
   def winner
-    [human, computer].select { |player| player.match_winner? }.first
+    [human, computer].find(&:match_winner?)
   end
 
   def display_winning_message
@@ -214,12 +223,11 @@ class RPSMatch
     loop do
       Game.new(human, computer).play
       display_score
-      if winner
-        display_winning_message
-        display_move_histories
-        reset_scores
-        break unless play_again?
-      end
+      next unless winner
+      display_winning_message
+      display_move_histories
+      reset_scores
+      break unless play_again?
     end
 
     display_goodbye_message
