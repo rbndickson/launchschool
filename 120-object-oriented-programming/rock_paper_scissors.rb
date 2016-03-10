@@ -49,15 +49,21 @@ class Paper < Move
 end
 
 class Player
-  attr_accessor :move, :name, :score
+  attr_accessor :move, :name, :score, :move_history
 
   def initialize
     set_name
     @score = 0
+    @move_history = []
   end
 
   def move_name
     move.name
+  end
+
+  def move_history_display
+    output = move_history.inject('') { |str, move| str + move + ', '  }
+    output[0..-3] + '.'
   end
 
   def match_winner?
@@ -118,6 +124,7 @@ class Game
     display_moves
     @winner = calculate_winner
     update_score
+    update_move_histories
     display_winner
   end
 
@@ -133,6 +140,10 @@ class Game
 
   def update_score
     @winner.score += 1 if @winner
+  end
+
+  def update_move_histories
+    [human, computer].each { |player| player.move_history << player.move.name }
   end
 
   def display_winner
@@ -175,6 +186,11 @@ class RPSMatch
     puts "#{winner.name} has won the match!"
   end
 
+  def display_move_histories
+    puts "#{human.name} chose #{human.move_history_display}"
+    puts "#{computer.name} chose #{computer.move_history_display}"
+  end
+
   def reset_scores
     [human, computer].each { |player| player.score = 0 }
   end
@@ -200,6 +216,7 @@ class RPSMatch
       display_score
       if winner
         display_winning_message
+        display_move_histories
         reset_scores
         break unless play_again?
       end
