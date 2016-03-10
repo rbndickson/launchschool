@@ -49,10 +49,11 @@ class Paper < Move
 end
 
 class Player
-  attr_accessor :move, :name
+  attr_accessor :move, :name, :score
 
   def initialize
     set_name
+    @score = 0
   end
 
   def move_name
@@ -98,7 +99,48 @@ class Computer < Player
   end
 end
 
-class RPSGame
+class Game
+  attr_reader :human, :computer
+
+  def initialize(human, computer)
+    @human = human
+    @computer = computer
+    @winner = nil
+  end
+
+  def play
+    human.choose
+    computer.choose
+    display_moves
+    @winner = calculate_winner
+    update_score
+    display_winner
+  end
+
+  def calculate_winner
+    return human if human.move > computer.move
+    return computer if human.move < computer.move
+  end
+
+  def display_moves
+    puts "#{human.name} chose #{human.move_name}."
+    puts "#{computer.name} chose #{computer.move_name}."
+  end
+
+  def update_score
+    @winner.score += 1 if @winner
+  end
+
+  def display_winner
+    if @winner
+      puts "#{@winner.name} won!"
+    else
+      puts "It's a tie!"
+    end
+  end
+end
+
+class RPSMatch
   attr_accessor :human, :computer
 
   def initialize
@@ -114,19 +156,8 @@ class RPSGame
     puts 'Thank you for playing!'
   end
 
-  def display_moves
-    puts "#{human.name} chose #{human.move_name}."
-    puts "#{computer.name} chose #{computer.move_name}."
-  end
-
-  def display_winner
-    if human.move > computer.move
-      puts "#{human.name} won!"
-    elsif human.move < computer.move
-      puts "#{computer.name} won!"
-    else
-      puts "It's a tie!"
-    end
+  def display_score
+    puts "#{human.name} #{human.score} - #{computer.score} #{computer.name}"
   end
 
   def play_again?
@@ -146,10 +177,8 @@ class RPSGame
     display_welcome_message
 
     loop do
-      human.choose
-      computer.choose
-      display_moves
-      display_winner
+      Game.new(human, computer).play
+      display_score
       break unless play_again?
     end
 
@@ -157,4 +186,4 @@ class RPSGame
   end
 end
 
-RPSGame.new.play
+RPSMatch.new.play
