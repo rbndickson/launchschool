@@ -1,33 +1,50 @@
+class MoveCreator
+  def initialize(move)
+    @move = move
+  end
+
+  def create
+    case @move
+    when 'rock' then Rock.new
+    when 'scissors' then Scissors.new
+    when 'paper' then Paper.new
+    end
+  end
+end
+
 class Move
-  VALUES = ['rock', 'paper', 'scissors'].freeze
-  attr_reader :value
+  RULES = {
+    'rock' =>     { wins_against: 'scissors', loses_to: 'paper' },
+    'scissors' => { wins_against: 'paper', loses_to: 'rock' },
+    'paper' =>    { wins_against: 'rock', loses_to: 'scissors' }
+  }.freeze
 
-  def initialize(value)
-    @value = value
-  end
-
-  def scissors?
-    @value == 'scissors'
-  end
-
-  def rock?
-    @value == 'rock'
-  end
-
-  def paper?
-    @value == 'paper'
-  end
+  attr_accessor :name
 
   def >(other_move)
-    rock? && other_move.scissors? ||
-      paper? && other_move.rock? ||
-      scissors? && other_move.paper?
+    other_move.name == RULES[name][:wins_against]
   end
 
   def <(other_move)
-    rock? && other_move.paper? ||
-      paper? && other_move.scissors? ||
-      scissors? && other_move.rock?
+    other_move.name == RULES[name][:loses_to]
+  end
+end
+
+class Rock < Move
+  def initialize
+    @name = 'rock'
+  end
+end
+
+class Scissors < Move
+  def initialize
+    @name = 'scissors'
+  end
+end
+
+class Paper < Move
+  def initialize
+    @name = 'paper'
   end
 end
 
@@ -35,8 +52,11 @@ class Player
   attr_accessor :move, :name
 
   def initialize
-    @move = nil
     set_name
+  end
+
+  def move_name
+    move.name
   end
 end
 
@@ -60,21 +80,21 @@ class Human < Player
     loop do
       puts 'Please choose rock, paper or scissors.'
       choice = gets.chomp
-      break if Move::VALUES.include?(choice)
+      break if Move::RULES.keys.include?(choice)
       puts 'Sorry, invalid choice.'
     end
 
-    self.move = Move.new(choice)
+    self.move = MoveCreator.new(choice).create
   end
 end
 
 class Computer < Player
   def set_name
-    self.name = ['Johnny 5', 'WallE', 'R2D2'].sample
+    self.name = ['Johnny 5', 'Wall-E', 'R2D2'].sample
   end
 
   def choose
-    self.move = Move.new(Move::VALUES.sample)
+    self.move = MoveCreator.new(Move::RULES.keys.sample).create
   end
 end
 
@@ -95,8 +115,8 @@ class RPSGame
   end
 
   def display_moves
-    puts "#{human.name} chose #{human.move.value}."
-    puts "#{computer.name} chose #{computer.move.value}."
+    puts "#{human.name} chose #{human.move_name}."
+    puts "#{computer.name} chose #{computer.move_name}."
   end
 
   def display_winner
