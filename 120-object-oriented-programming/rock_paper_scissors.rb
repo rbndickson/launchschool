@@ -1,17 +1,3 @@
-class MoveCreator
-  def initialize(move)
-    @move = move
-  end
-
-  def create
-    case @move
-    when 'rock' then Rock.new
-    when 'scissors' then Scissors.new
-    when 'paper' then Paper.new
-    end
-  end
-end
-
 class Move
   RULES = {
     'rock' =>     { wins_against: 'scissors', loses_to: 'paper' },
@@ -21,30 +7,16 @@ class Move
 
   attr_accessor :name
 
+  def initialize(name)
+    @name = name
+  end
+
   def >(other_move)
     other_move.name == RULES[name][:wins_against]
   end
 
   def <(other_move)
     other_move.name == RULES[name][:loses_to]
-  end
-end
-
-class Rock < Move
-  def initialize
-    @name = 'rock'
-  end
-end
-
-class Scissors < Move
-  def initialize
-    @name = 'scissors'
-  end
-end
-
-class Paper < Move
-  def initialize
-    @name = 'paper'
   end
 end
 
@@ -86,7 +58,7 @@ class Human < Player
       puts 'Sorry, invalid choice.'
     end
 
-    self.move = MoveCreator.new(choice).create
+    self.move = Move.new(choice)
   end
 
   private
@@ -118,7 +90,7 @@ class Computer < Player
 
   def choose
     weighted_choices = move_weights.to_a.map { |e| [e[0]] * e[1] }.flatten
-    self.move = MoveCreator.new(weighted_choices.sample).create
+    self.move = Move.new(weighted_choices.sample)
   end
 
   def update_move_weights(human_move)
