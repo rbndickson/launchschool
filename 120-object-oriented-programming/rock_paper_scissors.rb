@@ -1,35 +1,29 @@
 class Move
-  RULES = {
-    'rock' =>     { wins_against: 'scissors', loses_to: 'paper' },
-    'scissors' => { wins_against: 'paper', loses_to: 'rock' },
-    'paper' =>    { wins_against: 'rock', loses_to: 'scissors' }
-  }.freeze
-
   attr_accessor :name
 
   def initialize(name)
     @name = name
   end
-
-  def >(other_move)
-    other_move.name == RULES[name][:wins_against]
-  end
-
-  def <(other_move)
-    other_move.name == RULES[name][:loses_to]
-  end
 end
 
 class Player
-  attr_accessor :move, :name, :score, :move_history
+  attr_accessor :move, :name, :rules, :score, :move_history
 
   def initialize
     @score = 0
     @move_history = []
   end
 
+  def rpsls_rules?
+    rules.count == 5
+  end
+
   def move_name
     move.name
+  end
+
+  def won_game_against?(other_player)
+    rules[move.name][:wins_against].include?(other_player.move_name)
   end
 
   def move_history_display
@@ -38,7 +32,15 @@ class Player
   end
 
   def match_winner?
-    score == RPSMatch::FIRST_TO
+    score == Match::FIRST_TO
+  end
+
+  def display_move_instructions
+    if rpsls_rules?
+      puts 'Please choose rock, paper, scissors, lizard or spock.'
+    else
+      puts 'Please choose rock, paper or scissors.'
+    end
   end
 end
 
@@ -52,9 +54,9 @@ class Human < Player
     choice = nil
 
     loop do
-      puts 'Please choose rock, paper or scissors.'
+      display_move_instructions
       choice = gets.chomp
-      break if Move::RULES.keys.include?(choice)
+      break if rules.keys.include?(choice)
       puts 'Sorry, invalid choice.'
     end
 
@@ -80,6 +82,10 @@ end
 class Computer < Player
   attr_accessor :move_weights
 
+  def initialize
+    super
+  end
+
   def self.select(number)
     case number
     when '1' then Johnny5.new
@@ -95,9 +101,15 @@ class Computer < Player
 
   def update_move_weights(human_move)
     unless move_weights.values.include?(0)
-      move_weights[Move::RULES[human_move.name][:loses_to]] += 2
+      rules[human_move.name][:loses_to].each do |move_name|
+        move_weights[move_name] += 2
+      end
+
       move_weights[human_move.name] -= 1
-      move_weights[Move::RULES[human_move.name][:wins_against]] -= 1
+
+      rules[human_move.name][:wins_against].each do |move_name|
+        move_weights[move_name] -= 1
+      end
     end
   end
 end
@@ -106,7 +118,11 @@ class Johnny5 < Computer
   def initialize
     super
     @name = 'Johnny 5'
-    @move_weights = { 'rock' => 10, 'paper' => 10, 'scissors' => 10 }
+  end
+
+  def set_move_weights
+    self.move_weights = { 'rock' => 10, 'paper' => 10, 'scissors' => 10 }
+    move_weights.merge!('lizard' => 10, 'spock' => 10) if rpsls_rules?
   end
 end
 
@@ -114,7 +130,11 @@ class WallE < Computer
   def initialize
     super
     @name = 'Wall-E'
-    @move_weights = { 'rock' => 0, 'paper' => 0, 'scissors' => 30 }
+  end
+
+  def set_move_weights
+    self.move_weights = { 'rock' => 0, 'paper' => 0, 'scissors' => 50 }
+    move_weights.merge!('lizard' => 0, 'spock' => 0) if rpsls_rules?
   end
 end
 
@@ -122,12 +142,16 @@ class R2d2 < Computer
   def initialize
     super
     @name = 'R2D2'
-    @move_weights = { 'rock' => 20, 'paper' => 5, 'scissors' => 5 }
+  end
+
+  def set_move_weights
+    self.move_weights = { 'rock' => 20, 'paper' => 5, 'scissors' => 5 }
+    move_weights.merge!('lizard' => 15, 'spock' => 5) if rpsls_rules?
   end
 end
 
 class Game
-  attr_reader :human, :computer
+  attr_accessor :human, :computer
 
   def initialize(human, computer)
     @human = human
@@ -139,7 +163,7 @@ class Game
     human.choose
     computer.choose
     display_moves
-    calculate_winner
+    set_winner(human, computer)
     update_score
     update_move_histories
     computer.update_move_weights(human.move)
@@ -148,9 +172,9 @@ class Game
 
   private
 
-  def calculate_winner
-    @winner = human if human.move > computer.move
-    @winner = computer if human.move < computer.move
+  def set_winner(human, computer)
+    @winner = human if human.won_game_against?(computer)
+    @winner = computer if computer.won_game_against?(human)
   end
 
   def display_moves
@@ -171,8 +195,37 @@ class Game
   end
 end
 
-class RPSMatch
+class Match
   FIRST_TO = 3
+  RPS_RULES = {
+    'rock' =>     { wins_against: ['scissors'], loses_to: ['paper'] },
+    'scissors' => { wins_against: ['paper'], loses_to: ['rock'] },
+    'paper' =>    { wins_against: ['rock'], loses_to: ['scissors'] }
+  }.freeze
+
+  RPSLS_RULES = {
+    'rock' => {
+      wins_against: ['scissors', 'lizard'],
+      loses_to: ['paper', 'spock']
+    },
+    'scissors' => {
+      wins_against: ['paper', 'lizard'],
+      loses_to: ['rock', 'spock']
+    },
+    'paper' => {
+      wins_against: ['rock', 'spock'],
+      loses_to: ['scissors', 'lizard']
+    },
+    'lizard' => {
+      wins_against: ['paper', 'spock'],
+      loses_to: ['rock', 'scissors']
+    },
+    'spock' => {
+      wins_against: ['rock', 'scissors'],
+      loses_to: ['paper', 'lizard']
+    }
+  }.freeze
+
   attr_accessor :human, :computer
 
   def initialize(human)
@@ -181,6 +234,8 @@ class RPSMatch
   end
 
   def play
+    set_game_rules
+    computer.set_move_weights
     display_match_rules
 
     until winner
@@ -208,6 +263,25 @@ class RPSMatch
     Computer.select(answer)
   end
 
+  def set_game_rules
+    answer = nil
+
+    loop do
+      puts "Choose game type:\n1: Rock, scissors, paper\n2: Rock, scissors, paper, lizard, spock"
+      answer = gets.chomp
+      break if ['1', '2'].include?(answer.downcase)
+      puts 'Please enter 1 or 2.'
+    end
+
+    if answer == '1'
+      human.rules = RPS_RULES
+      computer.rules = RPS_RULES
+    else
+      human.rules = RPSLS_RULES
+      computer.rules = RPSLS_RULES
+    end
+  end
+
   def display_match_rules
     puts "The first player to win #{FIRST_TO} games is the winner!"
   end
@@ -225,8 +299,8 @@ class RPSMatch
   end
 
   def display_move_histories
-    puts "#{human.name} chose #{human.move_history_display}"
-    puts "#{computer.name} chose #{computer.move_history_display}"
+    puts "#{human.name} chose #{human.move_history_display}."
+    puts "#{computer.name} chose #{computer.move_history_display}."
   end
 
   def reset_human_data
@@ -244,7 +318,7 @@ class RPS
     display_welcome_message
 
     loop do
-      RPSMatch.new(@human).play
+      Match.new(@human).play
       break unless play_again?
     end
 
@@ -254,7 +328,7 @@ class RPS
   private
 
   def display_welcome_message
-    puts 'Welcome to Rock, Paper, Scissors'
+    puts 'Welcome to Rock, Paper, Scissors!'
   end
 
   def play_again?
