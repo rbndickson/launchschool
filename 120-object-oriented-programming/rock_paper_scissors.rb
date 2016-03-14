@@ -1,13 +1,33 @@
+module Display
+  def self.update(message, time=2)
+    sleep time
+    system 'clear'
+    puts "#{message}"
+  end
+end
+
 class Move
+  EMOJI = {
+    'rock' => "\xe2\x9c\x8a",
+    'scissors' => "\xe2\x9c\x8c\xef\xb8\x8f",
+    'paper' => "\xe2\x9c\x8b",
+    'lizard' => "\xf0\x9f\x90\x8d",
+    'spock' => "\xf0\x9f\x96\x96"
+  }.freeze
+
   attr_accessor :name
 
   def initialize(name)
     @name = name
   end
+
+  def emoji
+    EMOJI[name]
+  end
 end
 
 class Player
-  attr_accessor :move, :name, :rules, :score, :move_history
+  attr_accessor :move, :name, :rules, :score, :move_history, :avatar
 
   def initialize
     @score = 0
@@ -22,39 +42,44 @@ class Player
     move.name
   end
 
+  def hand
+    move ? move.emoji : ''
+  end
+
   def won_game_against?(other_player)
     rules[move.name][:wins_against].include?(other_player.move_name)
   end
 
-  def move_history_display
-    output = move_history.inject('') { |str, move| str + move + ', ' }
-    output[0..-3] + '.'
+  def move_history_emoji
+    move_history.inject('') { |str, move| str + move.emoji + ' ' }
   end
 
   def match_winner?
     score == Match::FIRST_TO
   end
-
-  def display_move_instructions
-    if rpsls_rules?
-      puts 'Please choose rock, paper, scissors, lizard or spock.'
-    else
-      puts 'Please choose rock, paper or scissors.'
-    end
-  end
 end
 
 class Human < Player
+  include Display
+
+  AVATARS = {
+    '1' => "\xf0\x9f\x98\x80",
+    '2' => "\xf0\x9f\x98\x8e",
+    '3' => "\xf0\x9f\x99\x83",
+    '4' => "\xf0\x9f\x90\xb0",
+    '5' => "\xf0\x9f\xa6\x84"
+  }
+
   def initialize
     super
     set_name
+    set_avatar
   end
 
   def choose
     choice = nil
 
     loop do
-      display_move_instructions
       choice = gets.chomp
       break if rules.keys.include?(choice)
       puts 'Sorry, invalid choice.'
@@ -69,13 +94,44 @@ class Human < Player
     n = ''
 
     loop do
-      puts "what's your name?"
+      Display.update("Please enter your name:")
       n = gets.chomp
       break unless n.empty?
       puts 'Sorry, you must enter a name'
     end
 
     self.name = n
+  end
+
+  def set_avatar
+    n = ''
+
+    loop do
+      Display.update(
+        "Please choose your avatar:\n" \
+        "1: #{AVATARS['1']}\n" \
+        "2: #{AVATARS['2']}\n" \
+        "3: #{AVATARS['3']}\n" \
+        "4: #{AVATARS['4']}\n" \
+        "5: #{AVATARS['5']}\n",
+        0
+      )
+      n = gets.chomp
+      break if ('1'..'5').include?(n)
+      puts 'Sorry, please choose a number 1 - 5'
+    end
+
+    self.avatar = AVATARS[n]
+  end
+end
+
+class ComputerCreator
+  def self.create(number)
+    case number
+    when '1' then TheMoon.new
+    when '2' then WallE.new
+    when '3' then Oni.new
+    end
   end
 end
 
@@ -84,14 +140,6 @@ class Computer < Player
 
   def initialize
     super
-  end
-
-  def self.select(number)
-    case number
-    when '1' then Johnny5.new
-    when '2' then WallE.new
-    when '3' then R2d2.new
-    end
   end
 
   def choose
@@ -114,10 +162,11 @@ class Computer < Player
   end
 end
 
-class Johnny5 < Computer
+class TheMoon < Computer
   def initialize
     super
-    @name = 'Johnny 5'
+    @name = 'The Moon'
+    @avatar = "\xf0\x9f\x8c\x9d"
   end
 
   def set_move_weights
@@ -130,6 +179,7 @@ class WallE < Computer
   def initialize
     super
     @name = 'Wall-E'
+    @avatar = "\xf0\x9f\xa4\x96"
   end
 
   def set_move_weights
@@ -138,10 +188,11 @@ class WallE < Computer
   end
 end
 
-class R2d2 < Computer
+class Oni < Computer
   def initialize
     super
-    @name = 'R2D2'
+    @name = 'Oni'
+    @avatar = "\xf0\x9f\x91\xb9"
   end
 
   def set_move_weights
@@ -160,26 +211,42 @@ class Game
   end
 
   def play
-    human.choose
-    computer.choose
-    display_moves
-    set_winner(human, computer)
+    clear_moves
+    game_display([move_instructions])
+    choose_moves
+    game_display
+    set_winner
     update_score
     update_move_histories
     computer.update_move_weights(human.move)
-    display_winner
+    game_display([winner_message])
   end
 
   private
 
-  def set_winner(human, computer)
-    @winner = human if human.won_game_against?(computer)
-    @winner = computer if computer.won_game_against?(human)
+  def players
+    [human, computer]
   end
 
-  def display_moves
-    puts "#{human.name} chose #{human.move_name}."
-    puts "#{computer.name} chose #{computer.move_name}."
+  def clear_moves
+    players.each { |player| player.move = nil }
+  end
+
+  def choose_moves
+    players.each(&:choose)
+  end
+
+  def move_instructions
+    if human.rpsls_rules?
+      'Please choose rock, paper, scissors, lizard or spock.'
+    else
+      'Please choose rock, paper or scissors.'
+    end
+  end
+
+  def set_winner
+    @winner = human if human.won_game_against?(computer)
+    @winner = computer if computer.won_game_against?(human)
   end
 
   def update_score
@@ -187,22 +254,35 @@ class Game
   end
 
   def update_move_histories
-    [human, computer].each { |player| player.move_history << player.move.name }
+    players.each { |player| player.move_history << player.move }
   end
 
-  def display_winner
-    @winner ? puts("#{@winner.name} won!") : puts("It's a tie!")
+  def winner_message
+    @winner ? "#{@winner.name} won!" : "It's a tie!"
+  end
+
+  def game_display(messages=[])
+    sleep 1.5
+    system 'clear'
+    puts "#{computer.name} ".rjust(16) + "#{computer.score}" + ' - ' \
+    "#{human.score}" + " #{human.name}".ljust(16)
+    puts ''
+    puts "#{computer.avatar}  #{computer.hand}".rjust(14) + '       ' \
+    "#{human.hand}  #{human.avatar}".ljust(14)
+    puts ''
+    messages.each { |message| puts "#{message}".center(35) }
   end
 end
 
 class Match
+  include Display
+
   FIRST_TO = 3
   RPS_RULES = {
-    'rock' =>     { wins_against: ['scissors'], loses_to: ['paper'] },
+    'rock'     => { wins_against: ['scissors'], loses_to: ['paper'] },
     'scissors' => { wins_against: ['paper'], loses_to: ['rock'] },
-    'paper' =>    { wins_against: ['rock'], loses_to: ['scissors'] }
+    'paper'    => { wins_against: ['rock'], loses_to: ['scissors'] }
   }.freeze
-
   RPSLS_RULES = {
     'rock' => {
       wins_against: ['scissors', 'lizard'],
@@ -240,11 +320,9 @@ class Match
 
     until winner
       Game.new(human, computer).play
-      display_score
     end
 
-    display_winning_message
-    display_move_histories
+    display_match_finished_message
     reset_human_data
   end
 
@@ -254,53 +332,71 @@ class Match
     answer = nil
 
     loop do
-      puts "Choose your opponent:\n1: Johnny 5\n2: Wall-E\n3: R2D2"
+      display_choose_opponent_text
       answer = gets.chomp
-      break if ['1', '2', '3'].include?(answer.downcase)
+      break if ['1', '2', '3'].include?(answer)
       puts 'Please enter 1, 2 or 3.'
     end
 
-    Computer.select(answer)
+    ComputerCreator.create(answer)
   end
 
   def set_game_rules
     answer = nil
 
     loop do
-      puts "Choose game type:\n1: Rock, scissors, paper\n2: Rock, scissors, paper, lizard, spock"
+      display_choose_game_text
       answer = gets.chomp
-      break if ['1', '2'].include?(answer.downcase)
+      break if ['1', '2'].include?(answer)
       puts 'Please enter 1 or 2.'
     end
 
     if answer == '1'
-      human.rules = RPS_RULES
-      computer.rules = RPS_RULES
+      [human, computer].each { |x| x.rules = RPS_RULES }
     else
-      human.rules = RPSLS_RULES
-      computer.rules = RPSLS_RULES
+      [human, computer].each { |x| x.rules = RPSLS_RULES }
     end
   end
 
-  def display_match_rules
-    puts "The first player to win #{FIRST_TO} games is the winner!"
+  def display_choose_opponent_text
+    Display.update(
+      "Choose your opponent:\n" \
+      "1: #{TheMoon.new.avatar}  The Moon\n" \
+      "2: #{WallE.new.avatar}  Wall-E\n" \
+      "3: #{Oni.new.avatar}  Oni",
+      0
+    )
   end
 
-  def display_score
-    puts "#{human.name} #{human.score} - #{computer.score} #{computer.name}"
+  def display_choose_game_text
+    Display.update(
+      "Choose game type:\n" \
+      "1: Rock, scissors, paper\n" \
+      "2: Rock, scissors, paper, lizard, spock",
+      0
+    )
+  end
+
+  def display_match_rules
+    Display.update("The first player to #{FIRST_TO} games is the winner!", 0)
   end
 
   def winner
     [human, computer].find(&:match_winner?)
   end
 
-  def display_winning_message
-    puts "#{winner.name} has won the match!"
+  def display_match_finished_message
+    puts "#{winner.name} has won the match!\n\n"
+    puts (human.name + ':').ljust(longest_name_length + 2) + human.move_history_emoji
+    puts (computer.name + ':').ljust(longest_name_length + 2) + computer.move_history_emoji
   end
 
-  def display_move_histories
-    puts "#{human.name} chose #{human.move_history_display}."
-    puts "#{computer.name} chose #{computer.move_history_display}."
+  def longest_name_length
+    if human.name.length > computer.name.length
+      human.name.length
+    else
+      computer.name.length
+    end
   end
 
   def reset_human_data
@@ -310,13 +406,14 @@ class Match
 end
 
 class RPS
+  include Display
+
   def initialize
+    Display.update('Welcome to Rock, Paper, Scissors!', 0)
     @human = Human.new
   end
 
   def start
-    display_welcome_message
-
     loop do
       Match.new(@human).play
       break unless play_again?
@@ -327,15 +424,11 @@ class RPS
 
   private
 
-  def display_welcome_message
-    puts 'Welcome to Rock, Paper, Scissors!'
-  end
-
   def play_again?
     answer = nil
 
     loop do
-      puts 'Would you like to play again?'
+      puts "\nWould you like to play again?"
       answer = gets.chomp
       break if ['y', 'n'].include?(answer.downcase)
       puts 'Please enter y for yes or n for no.'
