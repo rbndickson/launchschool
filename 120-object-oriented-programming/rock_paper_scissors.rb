@@ -24,7 +24,7 @@ class Move
 end
 
 class Player
-  attr_accessor :move, :name, :rules, :score, :move_history, :avatar
+  attr_accessor :move, :name, :rules, :score, :move_history
 
   def initialize
     @score = 0
@@ -65,7 +65,9 @@ class Human < Player
     '3' => "\xf0\x9f\x99\x83",
     '4' => "\xf0\x9f\x90\xb0",
     '5' => "\xf0\x9f\xa6\x84"
-  }
+  }.freeze
+
+  attr_accessor :avatar
 
   def initialize
     super
@@ -136,10 +138,20 @@ class ComputerCreator
 end
 
 class Computer < Player
+  AVATARS = {
+    'The Moon' => "\xf0\x9f\x8c\x9d",
+    'Wall-E'   => "\xf0\x9f\xa4\x96",
+    'Oni'      => "\xf0\x9f\x91\xb9",
+  }.freeze
+
   attr_accessor :move_weights
 
   def initialize
     super
+  end
+
+  def avatar
+    AVATARS[name]
   end
 
   def choose
@@ -169,7 +181,6 @@ class TheMoon < Computer
   def initialize
     super
     @name = 'The Moon'
-    @avatar = "\xf0\x9f\x8c\x9d"
   end
 
   def set_move_weights
@@ -182,7 +193,6 @@ class WallE < Computer
   def initialize
     super
     @name = 'Wall-E'
-    @avatar = "\xf0\x9f\xa4\x96"
   end
 
   def set_move_weights
@@ -195,7 +205,6 @@ class Oni < Computer
   def initialize
     super
     @name = 'Oni'
-    @avatar = "\xf0\x9f\x91\xb9"
   end
 
   def set_move_weights
@@ -381,9 +390,9 @@ class Match
   def choose_opponent_text
     <<~HEREDOC
     Choose your opponent:
-    1: #{TheMoon.new.avatar}  The Moon
-    2: #{WallE.new.avatar}  Wall-E
-    3: #{Oni.new.avatar}  Oni
+    1: #{Computer::AVATARS['The Moon']}  The Moon
+    2: #{Computer::AVATARS['Wall-E']}  Wall-E
+    3: #{Computer::AVATARS['Oni']}  Oni
     HEREDOC
   end
 
