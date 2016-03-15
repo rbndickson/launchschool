@@ -414,7 +414,7 @@ class Match
   end
 
   def longest_name_length
-    [human.name, computer.name].max.length
+    [human.name, computer.name].max_by(&:length).length
   end
 
   def reset_human_data
