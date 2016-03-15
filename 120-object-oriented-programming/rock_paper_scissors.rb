@@ -88,29 +88,29 @@ class Human < Player
   private
 
   def set_name
-    n = ''
+    name = ''
 
     loop do
       MenuDisplay.update('Please enter your name:')
-      n = gets.chomp
-      break unless n.empty?
+      name = gets.chomp
+      break unless name.empty?
       puts 'Sorry, you must enter a name.'
     end
 
-    self.name = n
+    self.name = name
   end
 
   def set_avatar
-    n = ''
+    avatar_number = ''
 
     loop do
       MenuDisplay.update(avatar_menu_text, 0)
-      n = gets.chomp
-      break if ('1'..'5').include?(n)
+      avatar_number = gets.chomp
+      break if ('1'..'5').include?(avatar_number)
       puts 'Please choose a number 1 - 5.'
     end
 
-    self.avatar = AVATARS[n]
+    self.avatar = AVATARS[avatar_number]
   end
 
   def avatar_menu_text
@@ -143,8 +143,11 @@ class Computer < Player
   end
 
   def choose
-    weighted_choices = move_weights.to_a.map { |e| [e[0]] * e[1] }.flatten
     self.move = Move.new(weighted_choices.sample)
+  end
+
+  def weighted_choices
+    move_weights.to_a.map { |arr| [arr[0]] * arr[1] }.flatten
   end
 
   def update_move_weights(human_move)
@@ -369,9 +372,9 @@ class Match
     end
 
     if answer == '1'
-      [human, computer].each { |x| x.rules = RPS_RULES }
+      [human, computer].each { |player| player.rules = RPS_RULES }
     else
-      [human, computer].each { |x| x.rules = RPSLS_RULES }
+      [human, computer].each { |player| player.rules = RPSLS_RULES }
     end
   end
 
