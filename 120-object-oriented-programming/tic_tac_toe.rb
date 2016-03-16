@@ -3,7 +3,7 @@ class Board
     [1, 2, 3], [4, 5, 6], [7, 8, 9],
     [1, 4, 7], [2, 5, 8], [3, 6, 9],
     [1, 5, 9], [3, 5, 7]
-  ].freeze
+  ]
 
   def initialize
     @squares = {}
@@ -62,7 +62,7 @@ class Board
 end
 
 class Square
-  INITIAL_MARKER = ' '.freeze
+  INITIAL_MARKER = ' '
 
   attr_accessor :marker
 
@@ -92,8 +92,8 @@ class Player
 end
 
 class TTTGame
-  HUMAN_MARKER = 'X'.freeze
-  COMPUTER_MARKER = 'O'.freeze
+  HUMAN_MARKER = 'X'
+  COMPUTER_MARKER = 'O'
   FIRST_TO_MOVE = HUMAN_MARKER
 
   attr_reader :board, :human, :computer
