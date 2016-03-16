@@ -1,3 +1,11 @@
+class Array
+  def joinor(delimiter=', ', before_last='or')
+    output = self.join(delimiter)
+    output[-3..-2] = " #{before_last} " if self.size > 1
+    output
+  end
+end
+
 class Board
   WINNING_LINES = [
     [1, 2, 3], [4, 5, 6], [7, 8, 9],
@@ -94,6 +102,19 @@ class Human < Player
     super
     @marker = MARKER
   end
+
+  def move(board)
+    puts "Choose a square from: #{board.unmarked_keys.joinor}:"
+    square = ''
+
+    loop do
+      square = gets.chomp.to_i
+      break if (board.unmarked_keys).include?(square)
+      puts 'Invalid inputs, please choose an empty square.'
+    end
+
+    board[square] = marker
+  end
 end
 
 class Computer < Player
@@ -102,6 +123,11 @@ class Computer < Player
   def initialize
     super
     @marker = MARKER
+  end
+
+  def move(board)
+    square = board.unmarked_keys.sample
+    board[square] = marker
   end
 end
 
@@ -135,36 +161,12 @@ class Game
 
   def current_player_moves
     if @next_turn == human
-      human_moves
+      human.move(board)
       @next_turn = computer
     else
-      computer_moves
+      computer.move(board)
       @next_turn = human
     end
-  end
-
-  def human_moves
-    puts "Choose a square from: #{joinor(board.unmarked_keys)}:"
-    square = ''
-
-    loop do
-      square = gets.chomp.to_i
-      break if (board.unmarked_keys).include?(square)
-      puts 'Invalid inputs, please choose an empty square.'
-    end
-
-    board[square] = human.marker
-  end
-
-  def joinor(array, delimiter=', ', before_last='or')
-    output = array.join(delimiter)
-    output[-3..-2] = " #{before_last} " if array.size > 1
-    output
-  end
-
-  def computer_moves
-    square = board.unmarked_keys.sample
-    board[square] = computer.marker
   end
 
   def calculate_winner
