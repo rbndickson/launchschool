@@ -78,13 +78,30 @@ end
 class Player
   attr_accessor :marker, :score
 
-  def initialize(marker)
-    @marker = marker
+  def initialize
     @score = 0
   end
 
   def match_winner?
     score == TTTMatch::FIRST_TO
+  end
+end
+
+class Human < Player
+  MARKER = 'X'
+
+  def initialize
+    super
+    @marker = MARKER
+  end
+end
+
+class Computer < Player
+  MARKER = 'O'
+
+  def initialize
+    super
+    @marker = MARKER
   end
 end
 
@@ -195,12 +212,10 @@ end
 
 class TTTMatch
   FIRST_TO = 5
-  HUMAN_MARKER = 'X'
-  COMPUTER_MARKER = 'O'
 
   def initialize
-    @human = Player.new(HUMAN_MARKER)
-    @computer = Player.new(COMPUTER_MARKER)
+    @human = Human.new
+    @computer = Computer.new
   end
 
   def play
