@@ -132,7 +132,7 @@ class TTTGame
   end
 
   def human_moves
-    puts "Choose a square from: #{board.unmarked_keys.join(', ')}"
+    display_human_moves_prompt
     square = ''
     loop do
       square = gets.chomp.to_i
@@ -140,6 +140,12 @@ class TTTGame
       puts 'Invalid inputs, please choose an empty square.'
     end
     board[square] = human.marker
+  end
+
+  def display_human_moves_prompt
+    prompt = "Choose a square from: #{board.unmarked_keys.join(', ')}:"
+    prompt[-4..-3] = ' or '
+    puts prompt
   end
 
   def computer_moves
