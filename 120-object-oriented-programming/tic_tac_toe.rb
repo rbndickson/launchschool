@@ -15,17 +15,13 @@ class Board
   end
 
   def draw
-    puts '     |     |'
-    puts "  #{@squares[1]}  |  #{@squares[2]}  |  #{@squares[3]}"
-    puts '     |     |'
-    puts '-----+-----+-----'
-    puts '     |     |'
-    puts "  #{@squares[4]}  |  #{@squares[5]}  |  #{@squares[6]}"
-    puts '     |     |'
-    puts '-----+-----+-----'
-    puts '     |     |'
-    puts "  #{@squares[7]}  |  #{@squares[8]}  |  #{@squares[9]}"
-    puts '     |     |'
+    <<~HEREDOC
+        #{@squares[1]}  |  #{@squares[2]}  |  #{@squares[3]}
+      -----+-----+-----
+        #{@squares[4]}  |  #{@squares[5]}  |  #{@squares[6]}
+      -----+-----+-----
+        #{@squares[7]}  |  #{@squares[8]}  |  #{@squares[9]}
+    HEREDOC
   end
 
   def unmarked_keys
@@ -198,11 +194,17 @@ class TTTGame
     system 'clear'
   end
 
+  def interface
+    <<~HEREDOC
+    You're #{human.marker}, Computer is #{computer.marker}
+
+    #{board.draw}
+
+    HEREDOC
+  end
+
   def display_board
-    puts "you're #{human.marker}, Computer is #{computer.marker}"
-    puts ''
-    board.draw
-    puts ''
+    puts interface
   end
 
   def clear_screen_and_display_board
