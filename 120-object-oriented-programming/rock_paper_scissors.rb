@@ -57,8 +57,6 @@ class Player
 end
 
 class Human < Player
-  include MenuDisplay
-
   AVATARS = {
     '1' => "\xf0\x9f\x98\x80",
     '2' => "\xf0\x9f\x98\x8e",
@@ -302,8 +300,6 @@ class Game
 end
 
 class Match
-  include MenuDisplay
-
   FIRST_TO = 3
   RPS_RULES = {
     'rock'     => { wins_against: ['scissors'], loses_to: ['paper'] },
