@@ -18,6 +18,10 @@ class Board
     (1..9).each { |key| @squares[key] = Square.new }
   end
 
+  def [](num)
+   @squares[num].marker
+  end
+
   def []=(num, marker)
    @squares[num].marker = marker
   end
@@ -48,14 +52,28 @@ class Board
     @squares.values.collect { |square| square.marker unless square.unmarked? }
   end
 
-  def all_same_marker?(squares)
+  def three_in_a_row?(squares)
     squares.all?(&:marked?) && squares.collect(&:marker).uniq.count == 1
+  end
+
+  def two_in_a_row?(squares)
+    squares.count { |square| square.marker == ' '} == 1 &&
+    squares.collect(&:marker).uniq.count == 2
+  end
+
+  def two_in_a_rows(marker)
+    arr = []
+    WINNING_LINES.each do |line|
+      line_squares = @squares.values_at(*line)
+      arr << line if two_in_a_row?(line_squares) && line_squares.any? { |square| square.marker == marker }
+    end
+    arr
   end
 
   def winning_marker
     WINNING_LINES.each do |line|
       line_squares = @squares.values_at(*line)
-      return line_squares.first.marker if all_same_marker?(line_squares)
+      return line_squares.first.marker if three_in_a_row?(line_squares)
     end
     nil
   end
@@ -126,6 +144,28 @@ class Computer < Player
   end
 
   def move(board)
+    if board.two_in_a_rows(marker).any?
+      attack(board)
+    elsif board.two_in_a_rows(Human::MARKER).any?
+      defend(board)
+    else
+      choose_random_position(board)
+    end
+  end
+
+  def attack(board)
+    board.two_in_a_rows(marker).first.each do |square|
+      board[square] = marker if board[square] == Square::INITIAL_MARKER
+    end
+  end
+
+  def defend(board)
+    board.two_in_a_rows(Human::MARKER).first.each do |square|
+      board[square] = marker if board[square] == Square::INITIAL_MARKER
+    end
+  end
+
+  def choose_random_position(board)
     square = board.unmarked_keys.sample
     board[square] = marker
   end
@@ -270,6 +310,5 @@ class TTTMatch
     puts 'Thanks for playing Tic Tac Toe! Goodbye!'
   end
 end
-
 
 TTTMatch.new.play
