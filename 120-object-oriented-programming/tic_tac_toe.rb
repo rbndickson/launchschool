@@ -6,6 +6,14 @@ class Array
   end
 end
 
+module MenuDisplay
+  def self.update(message, time=1)
+    sleep time
+    system 'clear'
+    puts "#{message}"
+  end
+end
+
 class Board
   WINNING_LINES = [
     [1, 2, 3], [4, 5, 6], [7, 8, 9],
@@ -111,7 +119,7 @@ class Square
 end
 
 class Player
-  attr_accessor :marker, :score
+  attr_accessor :name, :marker, :score
 
   def initialize
     @score = 0
@@ -123,15 +131,45 @@ class Player
 end
 
 class Human < Player
-  MARKER = 'X'
+  include MenuDisplay
+
+  attr_reader :marker
 
   def initialize
     super
-    @marker = MARKER
+    set_name
+    set_marker
+    @marker = marker
+  end
+
+  def set_name
+    name = ''
+
+    loop do
+      MenuDisplay.update('Please enter your name:')
+      name = gets.chomp
+      break unless name.empty?
+      puts 'You must enter a name.'
+    end
+
+    self.name = name
+  end
+
+  def set_marker
+    marker = ''
+
+    loop do
+      MenuDisplay.update('Please enter a marker:')
+      marker = gets.chomp
+      break if marker.length == 1
+      puts 'The marker must be 1 character long.'
+    end
+
+    self.marker = marker
   end
 
   def move(board)
-    puts "Choose a square from: #{board.unmarked_keys.joinor}:"
+    puts "Choose a square from #{board.unmarked_keys.joinor}:"
     square = ''
 
     loop do
@@ -142,20 +180,34 @@ class Human < Player
 
     board[square] = marker
   end
+
+  def display_menu(message)
+    sleep 1
+    system 'clear'
+    puts "#{message}"
+  end
 end
 
 class Computer < Player
   MARKER = 'O'
 
+  attr_accessor :opponents_marker
+
   def initialize
     super
+    set_name
     @marker = MARKER
+    @opponents_marker = nil
+  end
+
+  def set_name
+    self.name = ['Alice', 'Bob', 'Charlie'].sample
   end
 
   def move(board)
     if board.find_winning_space_for(marker)
       attack(board)
-    elsif board.find_winning_space_for(Human::MARKER)
+    elsif board.find_winning_space_for(opponents_marker)
       defend(board)
     elsif board.center_empty?
       choose_center_position(board)
@@ -169,7 +221,7 @@ class Computer < Player
   end
 
   def defend(board)
-    board[board.find_winning_space_for(Human::MARKER)] = marker
+    board[board.find_winning_space_for(opponents_marker)] = marker
   end
 
   def choose_center_position(board)
@@ -244,8 +296,8 @@ class Game
 
   def interface
     <<~HEREDOC
-    You         #{human.marker}       #{human.score}
-    Computer    #{computer.marker}       #{computer.score}
+    #{human.name.ljust(16)}#{human.marker}       #{human.score}
+    #{computer.name.ljust(16)}#{computer.marker}       #{computer.score}
 
 
     #{board.draw}
@@ -264,11 +316,14 @@ class Game
 end
 
 class TTTMatch
+  include MenuDisplay
+
   FIRST_TO = 5
 
   def initialize
     @human = Human.new
     @computer = Computer.new
+    @computer.opponents_marker = @human.marker
   end
 
   def play
@@ -277,7 +332,6 @@ class TTTMatch
     loop do
       Game.new(@human, @computer).play
       break if winner || !play_again?
-      print_play_again_message
     end
 
     print_match_winner
@@ -309,16 +363,13 @@ class TTTMatch
     answer == 'y'
   end
 
-  def print_play_again_message
-    puts "Let's play again!"
-    sleep 2
-  end
-
   def display_welcome_message
-    system 'clear'
-    puts 'Welcome to Tic Tac Toe!'
-    puts "The first to #{FIRST_TO} is the winner."
-    sleep 2
+    MenuDisplay.update(
+      <<~HEREDOC
+      Welcome to Tic Tac Toe!
+      The first to #{FIRST_TO} is the winner.
+      HEREDOC
+    )
   end
 
   def print_goodbye_message
