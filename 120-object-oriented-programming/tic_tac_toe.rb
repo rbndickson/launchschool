@@ -309,11 +309,14 @@ class TTTMatch
 
   def display_play_again_message
     puts "Let's play again!"
-    puts ''
+    sleep 2
   end
 
   def display_welcome_message
+    system 'clear'
     puts 'Welcome to Tic Tac Toe!'
+    puts "The first to #{FIRST_TO} is the winner."
+    sleep 2
   end
 
   def display_goodbye_message
