@@ -148,6 +148,8 @@ class Computer < Player
       attack(board)
     elsif board.two_in_a_rows(Human::MARKER).any?
       defend(board)
+    elsif board[5] == Square::INITIAL_MARKER
+      board[5] = marker
     else
       choose_random_position(board)
     end
