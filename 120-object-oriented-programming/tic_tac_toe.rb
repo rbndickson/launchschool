@@ -74,6 +74,7 @@ class Board
       squares = @squares.values_at(*line)
       return empty_square_position(squares) if two_in_a_row?(squares, marker)
     end
+
     nil
   end
 
@@ -82,6 +83,7 @@ class Board
       line_squares = @squares.values_at(*line)
       return line_squares.first.marker if three_in_a_row?(line_squares)
     end
+
     nil
   end
 end
@@ -187,7 +189,7 @@ class Game
     @human = human
     @computer = computer
     @board = Board.new
-    @next_turn = human
+    @next_player = human
     @winner = nil
   end
 
@@ -195,10 +197,9 @@ class Game
     clear
     display_board
 
-    loop do
-      current_player_moves
+    until board.someone_won? || board.full?
+      next_player_moves
       clear_screen_and_display_board
-      break if board.someone_won? || board.full?
     end
 
     calculate_winner
@@ -208,13 +209,13 @@ class Game
 
   private
 
-  def current_player_moves
-    if @next_turn == human
+  def next_player_moves
+    if @next_player == human
       human.move(board)
-      @next_turn = computer
+      @next_player = computer
     else
       computer.move(board)
-      @next_turn = human
+      @next_player = human
     end
   end
 
@@ -276,11 +277,11 @@ class TTTMatch
     loop do
       Game.new(@human, @computer).play
       break if winner || !play_again?
-      display_play_again_message
+      print_play_again_message
     end
 
     print_match_winner
-    display_goodbye_message
+    print_goodbye_message
   end
 
   def winner
@@ -297,6 +298,7 @@ class TTTMatch
 
   def play_again?
     answer = ''
+
     loop do
       puts "Would you like to play again? (y/n)"
       answer = gets.chomp.downcase
@@ -307,7 +309,7 @@ class TTTMatch
     answer == 'y'
   end
 
-  def display_play_again_message
+  def print_play_again_message
     puts "Let's play again!"
     sleep 2
   end
@@ -319,7 +321,7 @@ class TTTMatch
     sleep 2
   end
 
-  def display_goodbye_message
+  def print_goodbye_message
     puts 'Thanks for playing Tic Tac Toe! Goodbye!'
   end
 end
