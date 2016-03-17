@@ -6,11 +6,20 @@ class Array
   end
 end
 
-module MenuDisplay
-  def self.update(message, time=2)
-    sleep time
+module Display
+  def self.menu(message)
     system 'clear'
     puts "#{message}"
+  end
+
+  def self.title(message)
+    menu(message)
+    sleep 1
+  end
+
+  def self.flash(message, time=1)
+    puts message
+    sleep time
   end
 end
 
@@ -24,10 +33,6 @@ class Board
   def initialize
     @squares = {}
     (1..9).each { |key| @squares[key] = Square.new }
-  end
-
-  def [](num)
-   @squares[num].marker
   end
 
   def []=(num, marker)
@@ -123,6 +128,7 @@ class Player
 
   def initialize
     @score = 0
+    set_name
   end
 
   def match_winner?
@@ -131,25 +137,34 @@ class Player
 end
 
 class Human < Player
-  include MenuDisplay
-
-  attr_reader :marker
-
   def initialize
     super
-    set_name
     set_marker
-    @marker = marker
   end
+
+  def move(board)
+    square = ''
+
+    loop do
+      puts "Choose a square from #{board.unmarked_keys.joinor}:"
+      square = gets.chomp.to_i
+      break if (board.unmarked_keys).include?(square)
+      puts 'Invalid input, please choose an empty square.'
+    end
+
+    board[square] = marker
+  end
+
+  private
 
   def set_name
     name = ''
 
     loop do
-      MenuDisplay.update('Please enter your name:', 0)
+      Display.menu('Please enter your name:')
       name = gets.chomp
       break unless name.empty?
-      puts 'You must enter a name.'
+      Display.flash(puts 'You must enter a name.')
     end
 
     self.name = name
@@ -159,32 +174,13 @@ class Human < Player
     marker = ''
 
     loop do
-      MenuDisplay.update('Please enter a marker:', 0)
+      Display.menu('Please enter a marker:')
       marker = gets.chomp
       break if marker.length == 1
-      puts 'The marker must be 1 character long.'
+      Display.flash('The marker must be 1 character long.')
     end
 
     self.marker = marker
-  end
-
-  def move(board)
-    puts "Choose a square from #{board.unmarked_keys.joinor}:"
-    square = ''
-
-    loop do
-      square = gets.chomp.to_i
-      break if (board.unmarked_keys).include?(square)
-      puts 'Invalid inputs, please choose an empty square.'
-    end
-
-    board[square] = marker
-  end
-
-  def display_menu(message)
-    sleep 1
-    system 'clear'
-    puts "#{message}"
   end
 end
 
@@ -195,7 +191,6 @@ class Computer < Player
 
   def initialize
     super
-    set_name
     @marker = MARKER
     @opponents_marker = nil
   end
@@ -216,6 +211,8 @@ class Computer < Player
     end
   end
 
+  private
+
   def attack(board)
     board[board.find_winning_space_for(marker)] = marker
   end
@@ -235,7 +232,7 @@ class Computer < Player
 end
 
 class Game
-  attr_reader :board, :human, :computer
+  attr_reader :human, :computer, :board
 
   def initialize(human, computer)
     @human = human
@@ -245,8 +242,7 @@ class Game
   end
 
   def play
-    clear
-    display_board
+    clear_screen_and_display_board
 
     until board.someone_won? || board.full?
       next_player_moves
@@ -255,7 +251,7 @@ class Game
 
     update_score
     clear_screen_and_display_board
-    print_result
+    display_result
   end
 
   private
@@ -281,22 +277,17 @@ class Game
     winner.score += 1 if winner
   end
 
-  def print_result
-    if winner
-      puts "#{winner.name} won!"
-    else
-      puts "It's a tie!"
-    end
-
-    sleep 2
+  def display_result
+    Display.flash(result)
   end
 
-  def clear
-    system 'clear'
+  def result
+    winner ? "#{winner.name} won!" : "It's a tie!"
   end
 
   def interface
     <<~HEREDOC
+                   mark   score
     #{human.name.ljust(16)}#{human.marker}       #{human.score}
     #{computer.name.ljust(16)}#{computer.marker}       #{computer.score}
 
@@ -306,18 +297,18 @@ class Game
     HEREDOC
   end
 
-  def display_board
-    puts interface
+  def clear_screen_and_display_board
+    system 'clear'
+    display_board
   end
 
-  def clear_screen_and_display_board
-    clear
-    display_board
+  def display_board
+    puts interface
   end
 end
 
 class Match
-  FIRST_TO = 2
+  FIRST_TO = 5
 
   def initialize(human)
     @human = human
@@ -326,6 +317,8 @@ class Match
   end
 
   def play
+    display_match_rules
+
     until winner
       Game.new(@human, @computer).play
       print_play_again_message unless winner
@@ -335,17 +328,22 @@ class Match
     reset_human_score
   end
 
+  private
+
+  def display_match_rules
+    Display.flash("The first to #{FIRST_TO} is the winner!", 2)
+  end
+
   def winner
     [@human, @computer].find(&:match_winner?)
   end
 
   def print_play_again_message
-    puts "Let's play again!"
-    sleep 1
+    Display.flash("Let's play again!")
   end
 
   def print_match_winner
-    puts "#{winner.name} has won the match!"
+    Display.flash("#{winner.name} has won the match!")
   end
 
   def reset_human_score
@@ -365,7 +363,7 @@ class TTT
       break unless play_again?
     end
 
-    print_goodbye_message
+    display_goodbye_message
   end
 
   def play_again?
@@ -382,11 +380,11 @@ class TTT
   end
 
   def display_welcome_message
-    MenuDisplay.update('Welcome to Tic Tac Toe!', 1)
+    Display.title('Welcome to Tic Tac Toe!')
   end
 
-  def print_goodbye_message
-    puts 'Thanks for playing Tic Tac Toe! Goodbye!'
+  def display_goodbye_message
+    Display.flash('Thanks for playing Tic Tac Toe! Goodbye!')
   end
 end
 
