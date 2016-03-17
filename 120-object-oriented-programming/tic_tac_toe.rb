@@ -48,10 +48,6 @@ class Board
     !!winning_marker
   end
 
-  def markers
-    @squares.values.collect { |square| square.marker unless square.unmarked? }
-  end
-
   def three_in_a_row?(squares)
     squares.all?(&:marked?) && squares.collect(&:marker).uniq.count == 1
   end
