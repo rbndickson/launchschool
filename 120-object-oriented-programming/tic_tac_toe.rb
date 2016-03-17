@@ -28,7 +28,7 @@ class Board
     [1, 2, 3], [4, 5, 6], [7, 8, 9],
     [1, 4, 7], [2, 5, 8], [3, 6, 9],
     [1, 5, 9], [3, 5, 7]
-  ]
+  ].freeze
 
   def initialize
     @squares = {}
@@ -185,8 +185,8 @@ class Human < Player
 end
 
 class Computer < Player
-  MARKER = 'O'
-  NAMES = ['Alice', 'Bob', 'Charlie']
+  MARKER = 'O'.freeze
+  NAMES = ['Alice', 'Bob', 'Charlie'].freeze
 
   attr_accessor :opponents_marker
 
