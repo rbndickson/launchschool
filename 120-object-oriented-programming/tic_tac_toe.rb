@@ -27,7 +27,7 @@ class Board
   end
 
   def draw
-    <<~HEREDOC
+    <<-HEREDOC
         #{@squares[1]}  |  #{@squares[2]}  |  #{@squares[3]}
       -----+-----+-----
         #{@squares[4]}  |  #{@squares[5]}  |  #{@squares[6]}
@@ -236,8 +236,9 @@ class Game
 
   def interface
     <<~HEREDOC
-    You're #{human.marker}, Computer is #{computer.marker}
-    Score: You #{human.score}, Computer #{computer.score}
+    You         #{human.marker}       #{human.score}
+    Computer    #{computer.marker}       #{computer.score}
+
 
     #{board.draw}
 
