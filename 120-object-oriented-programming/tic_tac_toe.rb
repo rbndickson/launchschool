@@ -48,22 +48,33 @@ class Board
     !!winning_marker
   end
 
+  def center_empty?
+    @squares[5] == Square::INITIAL_MARKER
+  end
+
   def three_in_a_row?(squares)
     squares.all?(&:marked?) && squares.collect(&:marker).uniq.count == 1
   end
 
-  def two_in_a_row?(squares)
-    squares.count { |square| square.marker == ' '} == 1 &&
-    squares.collect(&:marker).uniq.count == 2
+  def two_in_a_row?(squares, marker)
+    squares.count { |square| square.marker == Square::INITIAL_MARKER} == 1 &&
+    squares.count { |square| square.marker == marker} == 2
   end
 
-  def two_in_a_rows(marker)
-    arr = []
-    WINNING_LINES.each do |line|
-      line_squares = @squares.values_at(*line)
-      arr << line if two_in_a_row?(line_squares) && line_squares.any? { |square| square.marker == marker }
+  def empty_square_position(squares)
+    empty_square = squares.find do |square|
+      square.marker == Square::INITIAL_MARKER
     end
-    arr
+
+    @squares.key(empty_square)
+  end
+
+  def find_winning_space_for(marker)
+    WINNING_LINES.each do |line|
+      squares = @squares.values_at(*line)
+      return empty_square_position(squares) if two_in_a_row?(squares, marker)
+    end
+    nil
   end
 
   def winning_marker
@@ -140,27 +151,27 @@ class Computer < Player
   end
 
   def move(board)
-    if board.two_in_a_rows(marker).any?
+    if board.find_winning_space_for(marker)
       attack(board)
-    elsif board.two_in_a_rows(Human::MARKER).any?
+    elsif board.find_winning_space_for(Human::MARKER)
       defend(board)
-    elsif board[5] == Square::INITIAL_MARKER
-      board[5] = marker
+    elsif board.center_empty?
+      choose_center_position(board)
     else
       choose_random_position(board)
     end
   end
 
   def attack(board)
-    board.two_in_a_rows(marker).first.each do |square|
-      board[square] = marker if board[square] == Square::INITIAL_MARKER
-    end
+    board[board.find_winning_space_for(marker)] = marker
   end
 
   def defend(board)
-    board.two_in_a_rows(Human::MARKER).first.each do |square|
-      board[square] = marker if board[square] == Square::INITIAL_MARKER
-    end
+    board[board.find_winning_space_for(Human::MARKER)] = marker
+  end
+
+  def choose_center_position(board)
+    board[5] = marker
   end
 
   def choose_random_position(board)
