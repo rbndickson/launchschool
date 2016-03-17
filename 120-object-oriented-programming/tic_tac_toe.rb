@@ -186,6 +186,7 @@ end
 
 class Computer < Player
   MARKER = 'O'
+  NAMES = ['Alice', 'Bob', 'Charlie']
 
   attr_accessor :opponents_marker
 
@@ -196,7 +197,7 @@ class Computer < Player
   end
 
   def set_name
-    self.name = ['Alice', 'Bob', 'Charlie'].sample
+    self.name = NAMES.sample
   end
 
   def move(board)
