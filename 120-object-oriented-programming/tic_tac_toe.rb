@@ -7,7 +7,7 @@ class Array
 end
 
 module MenuDisplay
-  def self.update(message, time=1)
+  def self.update(message, time=2)
     sleep time
     system 'clear'
     puts "#{message}"
@@ -57,7 +57,7 @@ class Board
   end
 
   def center_empty?
-    @squares[5] == Square::INITIAL_MARKER
+    @squares[5].marker == Square::INITIAL_MARKER
   end
 
   def three_in_a_row?(squares)
@@ -126,7 +126,7 @@ class Player
   end
 
   def match_winner?
-    score == TTTMatch::FIRST_TO
+    score == Match::FIRST_TO
   end
 end
 
@@ -146,7 +146,7 @@ class Human < Player
     name = ''
 
     loop do
-      MenuDisplay.update('Please enter your name:')
+      MenuDisplay.update('Please enter your name:', 0)
       name = gets.chomp
       break unless name.empty?
       puts 'You must enter a name.'
@@ -159,7 +159,7 @@ class Human < Player
     marker = ''
 
     loop do
-      MenuDisplay.update('Please enter a marker:')
+      MenuDisplay.update('Please enter a marker:', 0)
       marker = gets.chomp
       break if marker.length == 1
       puts 'The marker must be 1 character long.'
@@ -242,7 +242,6 @@ class Game
     @computer = computer
     @board = Board.new
     @next_player = human
-    @winner = nil
   end
 
   def play
@@ -254,9 +253,9 @@ class Game
       clear_screen_and_display_board
     end
 
-    calculate_winner
     update_score
-    display_result
+    clear_screen_and_display_board
+    print_result
   end
 
   private
@@ -271,23 +270,25 @@ class Game
     end
   end
 
-  def calculate_winner
+  def winner
     case board.winning_marker
-    when human.marker then @winner = human
-    when computer.marker then @winner = computer
+    when human.marker then human
+    when computer.marker then computer
     end
   end
 
   def update_score
-    @winner.score += 1 if @winner
+    winner.score += 1 if winner
   end
 
-  def display_result
-    case @winner
-    when human then puts 'You won!'
-    when computer then puts 'Computer won!'
-    else puts "It's a tie!"
+  def print_result
+    if winner
+      puts "#{winner.name} won!"
+    else
+      puts "It's a tie!"
     end
+
+    sleep 2
   end
 
   def clear
@@ -315,39 +316,56 @@ class Game
   end
 end
 
-class TTTMatch
-  include MenuDisplay
+class Match
+  FIRST_TO = 2
 
-  FIRST_TO = 5
-
-  def initialize
-    @human = Human.new
+  def initialize(human)
+    @human = human
     @computer = Computer.new
-    @computer.opponents_marker = @human.marker
+    @computer.opponents_marker = human.marker
   end
 
   def play
-    display_welcome_message
-
-    loop do
+    until winner
       Game.new(@human, @computer).play
-      break if winner || !play_again?
+      print_play_again_message unless winner
     end
 
     print_match_winner
-    print_goodbye_message
+    reset_human_score
   end
 
   def winner
     [@human, @computer].find(&:match_winner?)
   end
 
+  def print_play_again_message
+    puts "Let's play again!"
+    sleep 1
+  end
+
   def print_match_winner
-    if winner == @human
-      puts 'You have won the match!'
-    else
-      puts 'The computer has won the match!'
+    puts "#{winner.name} has won the match!"
+  end
+
+  def reset_human_score
+    @human.score = 0
+  end
+end
+
+class TTT
+  def initialize
+    display_welcome_message
+    @human = Human.new
+  end
+
+  def start
+    loop do
+      Match.new(@human).play
+      break unless play_again?
     end
+
+    print_goodbye_message
   end
 
   def play_again?
@@ -364,12 +382,7 @@ class TTTMatch
   end
 
   def display_welcome_message
-    MenuDisplay.update(
-      <<~HEREDOC
-      Welcome to Tic Tac Toe!
-      The first to #{FIRST_TO} is the winner.
-      HEREDOC
-    )
+    MenuDisplay.update('Welcome to Tic Tac Toe!', 1)
   end
 
   def print_goodbye_message
@@ -377,4 +390,4 @@ class TTTMatch
   end
 end
 
-TTTMatch.new.play
+TTT.new.start
