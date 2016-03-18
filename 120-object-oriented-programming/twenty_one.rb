@@ -136,6 +136,8 @@ end
 
 class Game
   BLACKJACK_AMOUNT = 21
+  FACE_DOWN_CARD = '**'
+  HIDDEN_CARD_TOTAL = '?'
 
   attr_reader :deck, :player, :dealer
 
@@ -153,6 +155,7 @@ class Game
     flip_dealers_card
     dealer_turn unless player.busted?
     show_result
+    reset_player_hand
   end
 
   private
@@ -193,7 +196,7 @@ class Game
 
   def dealers_card_total
     if @dealers_card_hidden
-      '**'.center(40)
+      HIDDEN_CARD_TOTAL.center(40)
     else
       dealer.card_total.to_s.center(40)
     end
@@ -209,11 +212,12 @@ class Game
 
   def dealers_cards
     if @dealers_card_hidden
-      cards = '**  ' + dealer.cards.last.to_s
-      cards.ljust(23)
+      cards = [FACE_DOWN_CARD, dealer.cards.last]
     else
-      dealer.cards.join('  ').ljust(23)
+      cards = dealer.cards
     end
+
+    cards.join('  ').ljust(23)
   end
 
   def players_cards
@@ -262,19 +266,23 @@ class Game
       nil
     end
   end
+
+  def reset_player_hand
+    @player.cards = []
+  end
 end
 
 class TwentyOne
   def initialize
-    display_welcome_message
     @player = Player.new
   end
 
   def start
+    display_welcome_message
+
     loop do
       Game.new(@player).play
       break unless play_again?
-      reset_player_hand
     end
 
     display_goodbye_message
@@ -295,10 +303,6 @@ class TwentyOne
 
   def display_welcome_message
     Display.title('Welcome to Twenty One!')
-  end
-
-  def reset_player_hand
-    @player.cards = []
   end
 
   def display_goodbye_message
