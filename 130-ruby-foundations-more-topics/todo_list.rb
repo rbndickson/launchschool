@@ -86,5 +86,17 @@ class TodoList
     @todos.each do |todo|
       yield(todo)
     end
+
+    self
+  end
+
+  def select
+    new_list = TodoList.new(@title)
+
+    each do |todo|
+      new_list.add(todo) if yield(todo)
+    end
+    
+    new_list
   end
 end
