@@ -115,4 +115,32 @@ class TodoList
 
     new_list
   end
+
+  def find_by_title(title)
+    results = @todos.select do |todo|
+      todo.title == title
+    end
+
+    results.first
+  end
+
+  def all_done
+    @todos.select { |todo| todo.done? }
+  end
+
+  def all_not_done
+    @todos.select { |todo| !todo.done? }
+  end
+
+  def mark_done(title)
+    find_by_title(title) && find_by_title(title).done!
+  end
+
+  def mark_all_done
+    each { |todo| todo.done! }
+  end
+
+  def mark_all_undone
+    each { |todo| todo.undone! }
+  end
 end
