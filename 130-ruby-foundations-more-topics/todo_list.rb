@@ -45,11 +45,11 @@ class TodoList
   end
 
   def first
-    @todos[0]
+    @todos.first
   end
 
   def last
-    @todos[-1]
+    @todos.last
   end
 
   def item_at(index)
@@ -65,11 +65,11 @@ class TodoList
   end
 
   def shift
-    @todos.delete_at(0)
+    @todos.shift
   end
 
   def pop
-    @todos.delete_at(-1)
+    @todos.pop
   end
 
   def remove_at(index)
