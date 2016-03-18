@@ -176,39 +176,48 @@ class Game
 
   def interface
     <<~HEREDOC
-    #{dealers_card_total}#{name(dealer)}#{dealers_cards}
-
-    #{players_card_total}#{name(player)}#{players_cards}
-
+     ----------------------------------------
+    |#{dealers_card_total}|
+    |#{name(dealer)}|
+    |                                        |
+    |                 #{dealers_cards}|
+    |                                        |
+    |                                        |
+    |                 #{players_cards}|
+    |                                        |
+    |#{name(player)}|
+    |#{players_card_total}|
+     ----------------------------------------
     HEREDOC
   end
 
   def dealers_card_total
     if @dealers_card_hidden
-      '**  '
+      '**'.center(40)
     else
-      dealer.card_total.to_s.ljust(4)
+      dealer.card_total.to_s.center(40)
     end
   end
 
   def players_card_total
-    player.card_total.to_s.ljust(4)
+    player.card_total.to_s.center(40)
   end
 
   def name(participant)
-    participant.name.ljust(11)
+    participant.name.center(40)
   end
 
   def dealers_cards
     if @dealers_card_hidden
-      '** ' + dealer.cards.last.to_s
+      cards = '**  ' + dealer.cards.last.to_s
+      cards.ljust(23)
     else
-      dealer.cards.join(' ')
+      dealer.cards.join('  ').ljust(23)
     end
   end
 
   def players_cards
-    player.cards.join(' ')
+    player.cards.join('  ').ljust(23)
   end
 
   def flip_dealers_card
