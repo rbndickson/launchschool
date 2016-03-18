@@ -64,6 +64,18 @@ class TodoList
     @todos[index].undone!
   end
 
+  def done?
+    @todos.all? do |todo|
+      todo.done?
+    end
+  end
+
+  def done!
+    @todos.each_index do |index|
+      mark_done_at(index)
+    end
+  end
+
   def shift
     @todos.shift
   end
@@ -82,6 +94,10 @@ class TodoList
     text
   end
 
+  def to_a
+    @todos
+  end
+
   def each
     @todos.each do |todo|
       yield(todo)
@@ -96,7 +112,7 @@ class TodoList
     each do |todo|
       new_list.add(todo) if yield(todo)
     end
-    
+
     new_list
   end
 end
