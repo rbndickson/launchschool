@@ -81,4 +81,10 @@ class TodoList
     text += @todos.join("\n")
     text
   end
+
+  def each
+    @todos.each do |todo|
+      yield(todo)
+    end
+  end
 end
