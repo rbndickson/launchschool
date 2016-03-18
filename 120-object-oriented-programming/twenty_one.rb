@@ -70,12 +70,12 @@ class Player < Participant
 end
 
 class Dealer < Participant
-  NAMES = ['Dale', 'Audrey', 'James', 'Lucy'].freeze
+  NAME = 'Dealer'.freeze
   MINIMUM_STAY = 17
 
   def initialize
     @cards = []
-    @name = NAMES.sample
+    @name = NAME
   end
 end
 
