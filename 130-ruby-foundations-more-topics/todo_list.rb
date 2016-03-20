@@ -90,7 +90,7 @@ class TodoList
   end
 
   def to_s
-    text = "---- Today's Todos -----\n"
+    text = "---- Today's Todos ----\n"
     text += @todos.join("\n")
     text
   end
