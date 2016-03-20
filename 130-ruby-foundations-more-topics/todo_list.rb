@@ -54,15 +54,15 @@ class TodoList
   end
 
   def item_at(index)
-    @todos[index]
+    @todos.fetch(index)
   end
 
   def mark_done_at(index)
-    @todos[index].done!
+    item_at(index).done!
   end
 
   def mark_undone_at(index)
-    @todos[index].undone!
+    item_at(index).undone!
   end
 
   def done?
@@ -86,7 +86,7 @@ class TodoList
   end
 
   def remove_at(index)
-    @todos.delete_at(index)
+    @todos.delete(item_at(index))
   end
 
   def to_s
