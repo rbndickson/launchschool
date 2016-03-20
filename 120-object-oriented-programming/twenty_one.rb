@@ -134,10 +134,68 @@ class Card
   end
 end
 
+class Interface
+  FACE_DOWN_CARD = '**'.freeze
+  HIDDEN_CARD_TOTAL = '?'.freeze
+
+  def initialize(dealer, player, dealers_card_hidden)
+    @dealer = dealer
+    @player = player
+    @dealers_card_hidden = dealers_card_hidden
+  end
+
+  def to_s
+    <<~HEREDOC
+     ----------------------------------------
+    |#{dealers_card_total_display}|
+    |#{name_display(@dealer)}|
+    |                                        |
+    |#{dealers_cards_display}|
+    |                                        |
+    |                                        |
+    |#{players_cards_display}|
+    |                                        |
+    |#{name_display(@player)}|
+    |#{players_card_total_display}|
+     ----------------------------------------
+    HEREDOC
+  end
+
+  private
+
+  def dealers_card_total_display
+    if @dealers_card_hidden
+      HIDDEN_CARD_TOTAL.center(40)
+    else
+      @dealer.card_total.to_s.center(40)
+    end
+  end
+
+  def players_card_total_display
+    @player.card_total.to_s.center(40)
+  end
+
+  def name_display(participant)
+    participant.name.center(40)
+  end
+
+  def dealers_cards_display
+    if @dealers_card_hidden
+      cards = [FACE_DOWN_CARD, @dealer.cards.last]
+    else
+      cards = @dealer.cards
+    end
+
+    ' ' * 17 + cards.join('  ').ljust(23)
+  end
+
+  def players_cards_display
+    ' ' * 17 + @player.cards.join('  ').ljust(23)
+  end
+end
+
 class Game
   BLACKJACK_AMOUNT = 21
-  FACE_DOWN_CARD = '**'
-  HIDDEN_CARD_TOTAL = '?'
 
   attr_reader :deck, :player, :dealer
 
@@ -174,54 +232,7 @@ class Game
   def display
     sleep 0.8
     system 'clear'
-    puts interface
-  end
-
-  def interface
-    <<~HEREDOC
-     ----------------------------------------
-    |#{dealers_card_total}|
-    |#{name(dealer)}|
-    |                                        |
-    |                 #{dealers_cards}|
-    |                                        |
-    |                                        |
-    |                 #{players_cards}|
-    |                                        |
-    |#{name(player)}|
-    |#{players_card_total}|
-     ----------------------------------------
-    HEREDOC
-  end
-
-  def dealers_card_total
-    if @dealers_card_hidden
-      HIDDEN_CARD_TOTAL.center(40)
-    else
-      dealer.card_total.to_s.center(40)
-    end
-  end
-
-  def players_card_total
-    player.card_total.to_s.center(40)
-  end
-
-  def name(participant)
-    participant.name.center(40)
-  end
-
-  def dealers_cards
-    if @dealers_card_hidden
-      cards = [FACE_DOWN_CARD, dealer.cards.last]
-    else
-      cards = dealer.cards
-    end
-
-    cards.join('  ').ljust(23)
-  end
-
-  def players_cards
-    player.cards.join('  ').ljust(23)
+    puts Interface.new(dealer, player, @dealers_card_hidden)
   end
 
   def flip_dealers_card
