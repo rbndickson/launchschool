@@ -39,6 +39,7 @@ class TodoList
     raise TypeError unless todo.instance_of? Todo
     @todos << todo
   end
+  alias_method :<<, :add
 
   def size
     @todos.size
