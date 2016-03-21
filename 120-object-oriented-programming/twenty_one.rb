@@ -53,6 +53,10 @@ class Player < Participant
     answer[0]
   end
 
+  def reset_cards
+    self.cards = []
+  end
+
   private
 
   def set_name
@@ -92,6 +96,10 @@ class Deck
 
   def initialize
     @cards = create_cards.shuffle
+  end
+
+  def deal_one_card
+    cards.pop
   end
 
   private
@@ -213,7 +221,7 @@ class Game
     flip_dealers_card
     dealer_turn unless player.busted?
     show_result
-    reset_player_hand
+    reset_player_cards
   end
 
   private
@@ -226,7 +234,7 @@ class Game
   end
 
   def deal(participant)
-    participant.cards << deck.cards.pop
+    participant.cards << deck.deal_one_card
   end
 
   def display
@@ -278,8 +286,8 @@ class Game
     end
   end
 
-  def reset_player_hand
-    @player.cards = []
+  def reset_player_cards
+    player.reset_cards
   end
 end
 
