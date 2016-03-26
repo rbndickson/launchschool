@@ -19,3 +19,10 @@ get "/chapters/:number" do
 
   erb :chapter
 end
+
+helpers do
+  def in_paragraphs(text)
+    text = text.gsub("\n\n", "</p><p>")
+    "<p>" + text + "</p>"
+  end
+end
