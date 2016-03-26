@@ -20,13 +20,43 @@ get "/chapters/:number" do
   erb :chapter
 end
 
+get "/search" do
+  unless params.empty?
+    query = params[:query]
+    chapters = []
+    12.times { |time| chapters << File.read("data/chp#{time + 1}.txt") }
+
+    @paragraphs_with_query = []
+
+    chapters.each_with_index do |chapter, chapter_index|
+      chapter.split("\n\n").each_with_index do |paragraph, paragraph_index|
+        if paragraph.include?(query)
+          @paragraphs_with_query << {
+            paragraph: paragraph,
+            paragraph_index: paragraph_index,
+            chapter_number: chapter_index + 1
+          }
+        end
+      end
+    end
+  end
+
+  erb :search
+end
+
 not_found do
   redirect "/"
 end
 
 helpers do
   def in_paragraphs(text)
-    text = text.gsub("\n\n", "</p><p>")
-    "<p>" + text + "</p>"
+    paragraphs = text.split("\n\n")
+    paragraphs.each_with_index.inject('') do |sum, (paragraph_content, index)|
+      sum + "<p id=paragraph_#{index}>#{paragraph_content}</p>"
+    end
+  end
+
+  def highlight_queries(text, word)
+    text.gsub(word, "<strong>#{word}</strong>")
   end
 end
