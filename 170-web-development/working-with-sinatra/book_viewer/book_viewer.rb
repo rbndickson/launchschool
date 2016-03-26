@@ -1,6 +1,6 @@
 require "tilt/erubis"
 require "sinatra"
-require "sinatra/reloader"
+require "sinatra/reloader" if development?
 
 before do
   @contents = File.readlines("data/toc.txt")
@@ -8,6 +8,7 @@ end
 
 get "/" do
   @title = "The Adventures of Sherlock Holmes"
+  
   erb :home
 end
 
