@@ -8,10 +8,12 @@ get "/" do
   erb :home
 end
 
-get "/chapters/1" do
-  @title = "Chapter 1"
+get "/chapters/:number" do
+  chapter_number = params[:number]
   @contents = File.readlines("data/toc.txt")
-  @chapter = File.read("data/chp1.txt")
+  chapter_title = @contents[chapter_number.to_i - 1]
+  @title = "Chapter #{@chapter_number}: #{chapter_title}"
+  @chapter = File.read("data/chp#{chapter_number}.txt")
 
   erb :chapter
 end
