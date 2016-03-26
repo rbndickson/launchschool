@@ -20,6 +20,10 @@ get "/chapters/:number" do
   erb :chapter
 end
 
+not_found do
+  redirect "/"
+end
+
 helpers do
   def in_paragraphs(text)
     text = text.gsub("\n\n", "</p><p>")
