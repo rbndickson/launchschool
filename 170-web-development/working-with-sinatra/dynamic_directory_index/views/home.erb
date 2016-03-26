@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dynamic Directory Index</title>
+</head>
+<body>
+  <h1>Dynamic Directory Index</h1>
+
+  <p>
+    <a href="/">a -> z</a> | <a href="/?order=reverse">z -> a</a>
+  </p>
+
+  <% @public_files.each do |file| %>
+    <p><a href="<%= file %>"><%= file %></a></p>
+  <% end %>
+
+</body>
+</html>
