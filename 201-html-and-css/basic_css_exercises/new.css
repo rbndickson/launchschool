@@ -1,0 +1,16 @@
+div {
+  display: inline-block;
+  height: 300px;
+  width: 300px;
+  box-sizing: border-box;
+}
+
+.red {
+  padding: 20px;
+  background-color: #ffcccc
+}
+
+.blue {
+  border: 2px solid black;
+  background-color: #ccccff
+}
