@@ -9,6 +9,55 @@
       label {
         display: block;
       }
+      p {
+        font-size: 18px;
+      }
+      h2 + p {
+        padding-top: 20px;
+      }
+      article p {
+        font-family: sans-serif;
+      }
+      main li:first-child {
+        text-indent: 15px;
+      }
+      main li + li {
+        border-top: 1px solid #0066cc;
+      }
+      main ul li + li {
+        border-top-style: dotted;
+      }
+      header ul {
+        display: none;
+      }
+      header > ul {
+        display: block;
+      }
+      header li:hover  ul {
+        display: block;
+      }
+      input[type="text"]:focus {
+        background: #fff9b5;
+      }
+      input[type="checkbox"]:checked + span {
+        font-weight: bold;
+      }
+      input[required] {
+        border: 1px solid #999999;
+      }
+      tr:nth-of-type(odd) td {
+        background: #d4f7fb;
+      }
+      td:nth-of-type(3n) {
+        text-align: center;
+      }
+      .subheading {
+        background: #e0e0e0;
+      }
+      #intro {
+        font-size: 20px;
+        text-decoration: underline;
+      }
     </style>
   </head>
   <body>
