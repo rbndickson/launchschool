@@ -1,0 +1,196 @@
+<!doctype html>
+
+<html lang="en-US">
+  <head>
+    <title>Contact Form</title>
+    <meta charset="utf-8">
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+
+      form {
+        width: 600px;
+        margin: 0 auto;
+      }
+
+      ol li {
+        margin-bottom: 20px;
+        list-style-type: none;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      input[type="text"], input[type="email"], input[type="number"] {
+        width: 100%;
+        height: 20px;
+        font-size: 14px;
+      }
+
+      fieldset {
+        border: 1px solid lightgrey;
+      }
+
+      textarea {
+        width: 100%;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <form action="#" method="post">
+      <ol>
+        <li>
+          <label for="first_name">First name</label>
+          <input type="text" name="first_name" id="first_name">
+        </li>
+        <li>
+          <label for="last_name">Last name</label>
+          <input type="text" name="last_name" id="last_name">
+        </li>
+        <li>
+          <label for="email">Email</label>
+          <input type="email" name="email" id="email" placeholder="alice@example.com" autocomplete="off">
+        </li>
+        <li>
+          <label for="city">City</label>
+          <input type="text" name="city" id="city">
+        </li>
+        <li>
+          <label for="state">State</label>
+          <select name="state" id="state">
+            <option>AK</option>
+            <option>AL</option>
+            <option>AR</option>
+            <option>AZ</option>
+            <option>CA</option>
+            <option>CO</option>
+            <option>CT</option>
+            <option>DC</option>
+            <option>DE</option>
+            <option>FL</option>
+            <option>GA</option>
+            <option>HI</option>
+            <option>IA</option>
+            <option>ID</option>
+            <option>IL</option>
+            <option>IN</option>
+            <option>KS</option>
+            <option>KY</option>
+            <option>LA</option>
+            <option>MA</option>
+            <option>MD</option>
+            <option>ME</option>
+            <option>MI</option>
+            <option>MN</option>
+            <option>MO</option>
+            <option>MS</option>
+            <option>MT</option>
+            <option>NC</option>
+            <option>ND</option>
+            <option>NE</option>
+            <option>NH</option>
+            <option>NJ</option>
+            <option>NM</option>
+            <option>NV</option>
+            <option>NY</option>
+            <option>OH</option>
+            <option>OK</option>
+            <option>OR</option>
+            <option>PA</option>
+            <option>RI</option>
+            <option>SC</option>
+            <option>SD</option>
+            <option>TN</option>
+            <option>TX</option>
+            <option>UT</option>
+            <option>VA</option>
+            <option>VT</option>
+            <option>WA</option>
+            <option>WI</option>
+            <option>WV</option>
+            <option>WY</option>
+          </select>
+        </li>
+        <li>
+          <label for="zipcode">Zipcode</label>
+          <input type="number" name="zipcode" id="zipcode">
+        </li>
+        <li>
+          <fieldset>
+            <legend>
+              Which of these colors do you most prefer?
+            </legend>
+            <label>
+              <input type="radio" name="category" value="yellow">
+              Yellow
+            </label>
+            <label>
+              <input type="radio" name="category" value="blue">
+              Blue
+            </label>
+            <label>
+              <input type="radio" name="category" value="red">
+              Red
+            </label>
+            <label>
+              <input type="radio" name="category" value="purple">
+              Purple
+            </label>
+            <label>
+              <input type="radio" name="category" value="green">
+              Green
+            </label>
+            <label>
+              <input type="radio" name="category" value="people">
+              People
+            </label>
+          </fieldset>
+        </li>
+        <li>
+          <fieldset>
+            <legend>
+              What web technologies do you want to hear more about?
+            </legend>
+            <label>
+              <input type="checkbox" name="category" value="html">
+              HTML
+            </label>
+            <label>
+              <input type="checkbox" name="category" value="css">
+              CSS
+            </label>
+            <label>
+              <input type="checkbox" name="category" value="javascript">
+              Javascript
+            </label>
+            <label>
+              <input type="checkbox" name="category" value="ruby">
+              Ruby
+            </label>
+            <label>
+              <input type="checkbox" name="category" value="rails">
+              Rails
+            </label>
+            <label>
+              <input type="checkbox" name="category" value="python">
+              Python
+            </label>
+          </fieldset>
+        </li>
+        <li>
+          <label for="comments">Comments</label>
+          <textarea name="comments" id="comments" rows="6" cols="56"></textarea>
+        </li>
+        <li>
+          <input type="hidden" name="timestamp" value="2016-04-13">
+          <input type="submit">
+          <input type="reset">
+        </li>
+      </ol>
+    </form>
+  </body>
+</html>
