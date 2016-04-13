@@ -1,0 +1,145 @@
+/*
+----------------------------------------
+Tantek Celik's Whitepsace Reset
+     Author:    Tantek Celik, Shane Riley
+    Version:    (CC) 2010 Some Rights Reserved - http://creativecommons.org/licenses/by/2.0
+Description:  Resets default styling of common browsers to a common base
+----------------------------------------
+*/
+
+ul,ol { list-style: none; }
+h1,h2,h3,h4,h5,h6,pre,code { font-size: 1em; }
+ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,body,html,p,blockquote,fieldset,input,dl,dt,dd, figure, figcaption {
+  margin: 0;
+  padding: 0; }
+a img,:link img,:visited img, fieldset { border: none; }
+address { font-style: normal; }
+header, section, article, nav, footer, hgroup, details, summary, figure, main { display: block; }
+mark {
+  color: inherit;
+  background: transparent; }
+abbr { border: none; }
+summary::-webkit-details-marker { display: none; }
+
+body {
+  font: normal 20px Avenir, Arial, sans-serif;
+  color: #45494d;
+  background: #2f2840 url("images/bg_body.gif");
+}
+
+header {
+  margin: 0 auto;
+  padding: 80px 0 80px 0;
+  box-sizing: border-box;
+}
+header img {
+  display: block;
+  margin: 0 auto;
+}
+nav {
+  margin: 0 auto;
+  padding: 0 0 50px 0;
+}
+nav ul {
+  text-align: center;
+  font-size: 26px;
+}
+nav ul li {
+  width: 160px;
+  padding: 0;
+  display: inline-block;
+  text-align: center;
+}
+nav ul li a {
+  color: #cacaca;
+  text-decoration: none;
+}
+nav ul li a.active {
+  color: #6db9ff;
+  font-weight: bold;
+}
+
+main {
+  margin: 0 auto;
+  padding: 120px 0 45px 0;
+  text-align: center;
+  background: #ffffff;
+}
+h2 {
+  padding-bottom: 40px;
+  font-size: 36px;
+}
+h3 {
+  padding-bottom: 30px;
+  font-size: 24px;
+  color: #3e59b2;
+}
+section {
+  margin: 0 auto;
+  padding: 0px 0 35px 0;
+}
+
+section p {
+  width: 800px;
+  margin: 0 auto;
+}
+
+section img {
+  padding-bottom: 40px;
+}
+
+main img {
+  display: block;
+  margin: 0 auto;
+}
+
+section ul {
+  padding-top: 120px;
+}
+
+section ul li {
+  display: inline-block;
+  padding: 0 30px 0 30px;
+}
+
+figcaption {
+  font-size: 24px;
+  color: #3e59b2
+}
+
+footer {
+  height: 300px;
+  margin: 0 auto;
+  padding: 90px 0 0 0;
+  box-sizing: border-box;
+  background: #e7e7e7;
+  color: #b1b1b1;
+}
+footer p {
+  text-align: center;
+  padding-bottom: 40px;
+}
+footer ul {
+  margin: 0 auto;
+  text-align: center;
+}
+
+/*Pseudo element CSS*/
+
+footer ul li {
+  display: inline-block;
+  width: 46px;
+  height: 46px;
+  margin: 0 60px;
+  content: "";
+  background: transparent url("images/icons_social-media.png") 0 0 no-repeat;
+}
+footer ul li.facebook {
+  background-position: 0 -46px;
+}
+footer ul li.email {
+  background-position: 0 -92px;
+}
+footer ul li.instagram {
+  background-position: 0 100%;
+}
