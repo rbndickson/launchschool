@@ -1,0 +1,140 @@
+<!doctype html>
+
+<html lang="en-US">
+  <head>
+    <title>Forms</title>
+    <meta charset="utf-8">
+    <style>
+    </style>
+  </head>
+  <body>
+    <form action="#" method="post">
+      <fieldset>
+        <div>
+          <label for="first_name">First name:</label>
+          <input type="text" name="first_name" id="first_name">
+        </div>
+        <div>
+          <label for="last_name">Last name:</label>
+          <input type="text" name="last_name" id="last_name">
+        </div>
+        <div>
+          <label for="email">Email:</label>
+          <input type="email" name="email" id="email" autocomplete="off" autocapitalise="none" autocorrect="none">
+        </div>
+        <div>
+          <label for="tel">Telephone number:</label>
+          <input type="tel" name="tel" id="tel">
+        </div>
+        <div>
+          <label for="phone_type">Phone type:</label>
+          <select name="phone_type" id="phone_type">
+            <option value="home" selected>Home</option>
+            <option value="business">Business</option>
+            <option value="mobile">Mobile</option>
+          </select>
+        </div>
+        <div>
+          <input type="submit">
+        </div>
+      </fieldset>
+    </form>
+    <form action="#" method="get">
+      <fieldset>
+        <div>
+          <h3>Category</h3>
+          <label>
+            <input type="radio" name="category" value="core">
+            Core
+          </label>
+          <label>
+            <input type="radio" name="category" value="plugins_and_libraries">
+            Plugins and Libraries
+          </label>
+          <label>
+            <input type="radio" name="category" value="conventions">
+            Conventions
+          </label>
+          <label>
+            <input type="radio" name="category" value="reviews">
+            Reviews
+          </label>
+          <label>
+            <input type="radio" name="category" value="opinion">
+            Opinion
+          </label>
+          <label>
+            <input type="radio" name="category" value="people">
+            People
+          </label>
+        </div>
+        <div>
+          <h3>Tags</h3>
+          <label>
+            <input type="checkbox" name="category" value="html">
+            HTML
+          </label>
+          <label>
+            <input type="checkbox" name="category" value="css">
+            CSS
+          </label>
+          <label>
+            <input type="checkbox" name="category" value="javascript">
+            Javascript
+          </label>
+          <label>
+            <input type="checkbox" name="category" value="ruby">
+            Ruby
+          </label>
+          <label>
+            <input type="checkbox" name="category" value="rails">
+            Rails
+          </label>
+          <label>
+            <input type="checkbox" name="category" value="python">
+            Python
+          </label>
+          <label>
+            <input type="checkbox" name="category" value="django">
+            Django
+          </label>
+        </div>
+        <div>
+          <input type="submit" value="Filter">
+          <input type="reset">
+        </div>
+      </fieldset>
+    </form>
+    <form action="#" method="get">
+      <fieldset>
+        <div>
+          <label for="category">Category:</label>
+          <select name="category">
+            <option value="core" selected>Core</option>
+            <option value="plugins_and_libraries">Plugins and Libraries</option>
+            <option value="conventions">Conventions</option>
+            <option value="reviews">Reviews</option>
+            <option value="opinion">Opinion</option>
+            <option value="people">People</option>
+          </select>
+        </div>
+        <div>
+          <label for="tags">Tags:</label>
+          <select name="tags" multiple size="7">
+            <option value="html">HTML</option>
+            <option value="css">CSS</option>
+            <option value="javascript">Javascript</option>
+            <option value="ruby">Ruby</option>
+            <option value="rails">Rails</option>
+            <option value="python">Python</option>
+            <option value="django">Django</option>
+          </select>
+        </div>
+        <div>
+          <input type="submit" value="Filter">
+          <input type="reset">
+        </div>
+      </fieldset>
+    </form>
+  </body>
+</html>
