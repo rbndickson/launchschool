@@ -24,17 +24,23 @@ summary::-webkit-details-marker { display: none; }
 body {
   font: normal 20px Avenir, Arial, sans-serif;
   color: #45494d;
-  background: #2f2840 url("images/bg_body.gif");
+  background: #2f2840 url("images/bg_body.gif") 50% 0 repeat;
 }
 
 header {
-  margin: 0 auto;
-  padding: 80px 0 80px 0;
+  padding: 0 0 0 0;
   box-sizing: border-box;
+  text-align: center;
 }
-header img {
-  display: block;
-  margin: 0 auto;
+
+header h1 a {
+  display: inline-block;
+  width: 298px;
+  height: 243px;
+  margin: 80px 0;
+  /*to hide the text:*/
+  text-indent: -9999px;
+  background: transparent url("images/logo.png")
 }
 nav {
   margin: 0 auto;
@@ -80,11 +86,13 @@ section {
 }
 
 section p {
-  width: 800px;
+  max-width: 800px;
   margin: 0 auto;
+  text-align: justify;
 }
 
 section img {
+  max-width: 100%;
   padding-bottom: 40px;
 }
 
@@ -110,7 +118,7 @@ figcaption {
 footer {
   height: 300px;
   margin: 0 auto;
-  padding: 90px 0 0 0;
+  padding-top: 90px;
   box-sizing: border-box;
   background: #e7e7e7;
   color: #b1b1b1;
@@ -142,4 +150,85 @@ footer ul li.email {
 }
 footer ul li.instagram {
   background-position: 0 100%;
+}
+
+@media (max-width: 720px) {
+  header h1 a {
+    height: 180px;
+    margin: 70px 0 30px 0;
+    background: transparent url("images/logo.png") center no-repeat;
+    background-size: 220px;
+  }
+  nav {
+    padding: 0 0 25px 0;
+  }
+  nav ul li {
+    width: 140px;
+  }
+  main {
+    padding: 60px 0 30px 0;
+  }
+  section p {
+    padding: 0 10px 0 30px;
+  }
+  section img {
+    max-width: 100%
+  }
+
+  footer ul li {
+    margin: 0 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    position: relative;
+    height: 130px;
+    padding: 0;
+    overflow: hidden;
+  }
+  header h1 a {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(0, -50%);
+    height: 50px;
+    margin: 0;
+    padding: 10px 0 0 80px;
+    box-sizing: border-box;
+    background: transparent url("images/logo.png") top left no-repeat;
+    background-size: 90px;
+    text-indent: 0;
+    text-decoration: none;
+    text-align: left;
+    color: #ffffff;
+  }
+  nav {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate(0, -50%);
+    margin: 0;
+    padding: 0;
+  }
+  nav ul li {
+    padding: 5px 20px 5px 0;
+    display: block;
+    text-align: right;
+    font-size: 16px;
+  }
+  body {
+    font: normal 16px Avenir, Arial, sans-serif;
+  }
+  h2 {
+    font-size: 26px;
+    padding-bottom: 20px;
+  }
+  footer {
+    height: 200px;
+    padding-top: 40px
+  }
+  footer ul li {
+    margin: 0 20px;
+  }
 }
