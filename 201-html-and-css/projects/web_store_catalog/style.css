@@ -1,0 +1,120 @@
+html {
+  background: #fff
+}
+
+body {
+  width: 980px;
+  margin: 0 auto;
+  padding-bottom: 40px;
+  background: #ffd505;
+  font: normal 16px Arial, sans-serif;
+}
+
+header {
+  height: 105px;
+  width: 900px;
+  display: flex;
+  margin: 0 auto 30px auto;
+  box-sizing: border-box;
+  -moz-border-radius-bottomright: 12px;
+  -moz-border-radius-bottomleft: 12px;
+  -webkit-border-bottom-right-radius: 12px;
+  -webkit-border-bottom-left-radius: 12px;
+  align-items: center;
+  background: #047ec1;
+}
+
+header h1 {
+  margin: 0 0 0 25px;
+  padding: 0;
+  font: normal 36px 'Arial Black', Arial, sans-serif;
+  color: #fff;
+}
+
+main {
+  width: 900px;
+  padding: 25px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: #ececec;
+}
+
+main h2 {
+  margin: 0 0 25px 0;
+  padding: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+ul li {
+  float: left;
+  width: 200px;
+  margin: 0 15px 17px 0;
+  padding: 12px;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+ul li:nth-child(4n) {
+  margin-right: -15px;
+}
+
+ul li:nth-child(4n+1) {
+  clear: both;
+}
+
+figure {
+  margin: 0;
+  text-align: center;
+}
+
+figure img {
+  height: 140px;
+}
+
+input[type="checkbox"] {
+  display: none;
+}
+
+input:checked + figure {
+  padding-top: 144px;
+}
+
+input:checked + figure img {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  width: 400px;
+  height: auto;
+  margin: 0 0 0 -200px;
+  z-index: 2;
+}
+
+input:checked + figure:before {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  content: "";
+  background: rgba(0, 0, 0, .4);
+}
+
+dl {
+  margin-bottom: 0;
+  text-align: left;
+}
+
+dt {
+  font-weight: bold;
+}
+
+dd {
+  margin: 0;
+}
