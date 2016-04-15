@@ -1,0 +1,128 @@
+body {
+  width: 680px;
+  padding: 0 12px;
+  border: solid #000 2px;
+  box-sizing: border-box;
+  font: normal 32px 'Helvetica', 'Arial', sans-serif;
+}
+
+b {
+  font-family: 'Arial Black', sans-serif;
+}
+
+h1 {
+  margin: -20px 0 0 -6px;
+  font-family: 'Arial Black', sans-serif;
+  font-size: 78px;
+  letter-spacing: -2px;
+}
+
+header h2 {
+  margin: 0;
+  font: normal 32px 'Helvetica', 'Arial', sans-serif;
+}
+
+header h2:first-of-type {
+  margin: -16px 0 0 0;
+}
+
+header hr {
+  border-bottom: 26px solid #000;
+}
+
+h3 {
+  margin: 0;
+  font-family: 'Arial Black', sans-serif;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+hr {
+  border-top: 0;
+  border-bottom: 1px solid #000;
+  margin: 10px 0;
+}
+
+h3:nth-of-type(2) {
+  text-align: right;
+}
+
+ol, ul {
+  margin: 0;
+  padding: 0;
+}
+
+body > ul {
+  border-bottom: 14px solid #000;
+}
+
+ul li {
+  margin: -4px 0 4px 0;
+  display: inline-block;
+  list-style-type: none;
+}
+
+body ul:first-of-type li {
+  width: 50%;
+}
+
+ul li:nth-child(1) {
+  width: 70%;
+}
+
+ul li:nth-child(2) {
+  width: 30%;
+  text-align: right;
+}
+
+ol ul {
+  border-top: 1px solid #000;
+  box-sizing: border-box;
+}
+
+ol ol ul {
+  margin-left: 30px;
+}
+
+body > ol:first-of-type > ul:last-child {
+  border-bottom: 26px solid #000;
+}
+
+body > ol:last-of-type ul li {
+  margin-top: 10px;
+}
+
+body > ol:last-of-type ul:last-of-type li {
+  border-bottom: 1px solid #000;
+}
+
+p {
+  margin: 15px 0 15px 15px;
+  font-size: 24px;
+  word-spacing: 2px;
+}
+
+p:before {
+  display: block;
+  float: left;
+  margin: 0 0 0 -15px;
+  content: "*";
+}
+
+table {
+  width: 100%;
+  margin: 0 0 3px 0;
+  border-collapse: collapse;
+  font-size: 24px;
+}
+
+table tr th {
+  border-bottom: 1px solid #000;
+  text-align: left;
+  font-weight: normal;
+}
+
+table tr:nth-child(3) td:first-child,
+table tr:nth-child(7) td:first-child {
+  padding-left: 32px;
+}
