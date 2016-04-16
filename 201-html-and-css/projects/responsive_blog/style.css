@@ -87,9 +87,6 @@ header figure li.teal   { background: #32ffe2 }
 header figure li.steel  { background: #b1cbe3 }
 header figure li.orange { background: #ff6339 }
 
-header nav ul {
-  display: inline-block;
-}
 header nav ul li {
   display: inline-block;
   margin: 116px 0 0 0;

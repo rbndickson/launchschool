@@ -5,8 +5,9 @@
     <title>Box Model</title>
     <meta charset="utf-8" />
     <style>
-      .inline {
+      section#inline div.container div {
         display: inline;
+        margin: 100;
       }
       .block {
         width: 100px;
@@ -18,88 +19,111 @@
         height: 100px;
         display: inline-block;
       }
-      .display-type {
+      .container {
         display: inline-block;
       }
       .with-border {
         border: solid 3px black;
       }
-      .yellow {
+      .border-box {
+        box-sizing: border-box;
+        padding: 20px;
+      }
+      div div:first-of-type {
         background: yellow;
       }
-      .blue {
+      div div:nth-of-type(2) {
         background: blue;
       }
-      .green {
+      div div:nth-of-type(3) {
         background: green;
       }
-      .purple {
+      div div:last-of-type {
         background: purple;
       }
     </style>
   </head>
   <body>
-    Inline (width and height are ignored, also margin on top and bottom, as this is meant to be used inline. Padding is not ignored but applied outside of the element.)
-    <br>
-    <div>
-      <div class="display-type">
-        <div class="inline yellow">yellow</div>
-        <div class="inline blue">blue</div>
-        <div class="inline green">green</div>
-        <div class="inline purple">purple</div>
+    <section id="inline">
+      <h3>Inline</h3>
+      <p>
+        Width, height and margin are ignored, as this is meant to be used inline.
+        Padding is not ignored but applied outside of the element. Border is not ignored
+      </p>
+      <div class="container">
+        <div>yellow</div>
+        <div>blue</div>
+        <div>green</div>
+        <div>purple</div>
       </div>
-      <div class="display-type">
-        <div class="inline with-border yellow">yellow</div>
-        <div class="inline with-border blue">blue</div>
-        <div class="inline with-border green">green</div>
-        <div class="inline with-border purple">purple</div>
+      <div class="container">
+        <div>yellow</div>
+        <div>blue</div>
+        <div>green</div>
+        <div>purple</div>
       </div>
-    </div>
-    <br>
-    Block
-    <br>
-    <div class="display-type">
-      <div class="block yellow"></div>
-      <div class="block blue"></div>
-      <div class="block green"></div>
-      <div class="block purple"></div>
-    </div>
-    <div class="display-type">
-      <div class="block with-border yellow"></div>
-      <div class="block with-border blue"></div>
-      <div class="block with-border green"></div>
-      <div class="block with-border purple"></div>
-    </div>
-    <br>
-    Inline Block (By default inline block elements are set to vertical-align: middle)
-    This automatically has whitespace inbtween the inline-blocks
-    <br>
-    <div class="display-type">
-      <div class="inline-block yellow"></div>
-      <div class="inline-block blue"></div>
-      <div class="inline-block green"></div>
-      <div class="inline-block purple"></div>
-    </div>
-    <div class="display-type">
-      <div class="inline-block with-border yellow"></div>
-      <div class="inline-block with-border blue"></div>
-      <div class="inline-block with-border green"></div>
-      <div class="inline-block with-border purple"></div>
-    </div>
-    <br>
-    To remove this start the following block on the same line as the previous one in the HTML:
-    <br>
-    <div class="display-type">
-      <div class="inline-block yellow"></div><div class="inline-block blue">
-      </div><div class="inline-block green">
-      </div><div class="inline-block purple">
+    </section>
+
+    <section>
+      <h3>Block</h3>
+      <p>
+        These have the same height. But the height does not include border, padding OR margin
+        by default. You need to use border-box for that. The third row uses box-sizing: border-box;
+        border-box includes border and padding, but not margin.
+      </p>
+      <div class="container">
+        <div class="block yellow"></div>
+        <div class="block blue"></div>
+        <div class="block green"></div>
+        <div class="block purple"></div>
       </div>
-    </div>
-    <div class="display-type">
-      <div class="inline-block with-border yellow"></div><div class="inline-block with-border blue">
-      </div><div class="inline-block with-border green">
-      </div><div class="inline-block with-border purple">
+      <div class="container">
+        <div class="block with-border yellow"></div>
+        <div class="block with-border blue"></div>
+        <div class="block with-border green"></div>
+        <div class="block with-border purple"></div>
       </div>
-    </div>
+      <div class="container">
+        <div class="block with-border border-box yellow"></div>
+        <div class="block with-border border-box blue"></div>
+        <div class="block with-border border-box green"></div>
+        <div class="block with-border border-box purple"></div>
+      </div>
+    </section>
+
+    <section>
+      <h3>Inline Block</h3>
+      <p>
+        By default inline block elements are set to vertical-align: middle.
+        This automatically has whitespace inbtween the inline-blocks
+      </p>
+      <div class="container">
+        <div class="inline-block yellow"></div>
+        <div class="inline-block blue"></div>
+        <div class="inline-block green"></div>
+        <div class="inline-block purple"></div>
+      </div>
+      <div class="container">
+        <div class="inline-block with-border yellow"></div>
+        <div class="inline-block with-border blue"></div>
+        <div class="inline-block with-border green"></div>
+        <div class="inline-block with-border purple"></div>
+      </div>
+      <br>
+      To remove this start the following block on the same line as the previous one in the HTML:
+      <br>
+      <div class="container">
+        <div class="inline-block yellow"></div><div class="inline-block blue">
+        </div><div class="inline-block green">
+        </div><div class="inline-block purple">
+        </div>
+      </div>
+      <div class="container">
+        <div class="inline-block with-border yellow"></div><div class="inline-block with-border blue">
+        </div><div class="inline-block with-border green">
+        </div><div class="inline-block with-border purple">
+        </div>
+      </div>
+    </section>
   </body>
 </html>
