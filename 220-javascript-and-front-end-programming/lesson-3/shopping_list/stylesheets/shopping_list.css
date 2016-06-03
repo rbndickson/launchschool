@@ -1,0 +1,100 @@
+body {
+  padding: 30px 0;
+  margin: 0;
+  font: normal 16px Helvetica, Arial, sans-serif;
+  text-align: center;
+  background: #6b7fd7;
+  color: #6154a1;
+}
+
+main {
+  display: block;
+  max-width: 600px;
+  padding: 30px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  background: #dffdff;
+  border-radius: 11px;
+}
+
+h1 {
+  margin: 0;
+}
+
+form {
+  width: 340px;
+  margin: 20px auto;
+}
+
+fieldset {
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+.left-col {
+  float:left;
+  margin-right:20px;
+}
+
+.right-col {
+  float: left;
+}
+
+input, label {
+  display: block;
+}
+
+label {
+  margin: 0 0 15px 0;
+}
+
+input[type="number"], input[type="text"] {
+  height: 50px;
+  padding: 5px;
+  margin: 0 0 20px 0;
+  font: normal 24px  Helvetica, Arial, sans-serif;
+  text-align: center;
+  border: 1px solid #cecece;
+  box-sizing: border-box;
+}
+
+input[type="number"] {
+  width: 50px;
+}
+
+input[type="text"] {
+  width: 200px;
+}
+
+input[type="submit"] {
+  float: right;
+  height: 40px;
+  width: 40px;
+  margin: 35px 0 0 0;
+  padding: auto;
+  font: normal 20px Helvetica, Arial, sans-serif;
+  color: #ffffff;
+  border: 0px;
+  border-radius: 180px;
+  background: #6154a1;
+}
+
+input:hover[type="submit"] {
+  background: #18107a;
+}
+
+ul li {
+  font: normal 24px Helvetica, Arial, sans-serif;
+  text-align: left;
+  margin: 0px 100px;
+}
+
+a {
+  color: #6154a1;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
