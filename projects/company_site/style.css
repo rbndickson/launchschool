@@ -112,7 +112,64 @@ section ul li {
 
 figcaption {
   font-size: 24px;
-  color: #3e59b2
+  color: #3e59b2;
+}
+
+a:-webkit-any-link {
+  text-decoration: none;
+}
+
+.modal-layer {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  background: rgba(0, 0, 0, .3);
+}
+
+.modal {
+  display: none;
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  z-index: 3;
+  width: 660px;
+  margin: 0 0 0 -400px; /* (660 + 70 + 70) / 2 */
+  padding: 125px 70px 70px 70px;
+  text-align: left;
+  background: #fff;
+}
+
+.modal p {
+  padding: 0;
+  font-size: 20px;
+}
+
+.modal img {
+  display: inline-block;
+  width: 96px;
+  margin: 0 30px 20px 0;
+  vertical-align: middle;
+}
+
+.modal h3 {
+  display: inline-block;
+  font-size: 24px;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+.modal a.close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1;
+  width: 30px;
+  height: 30px;
+  background: transparent url("images/icon_close.png") 0 0 no-repeat;
 }
 
 footer {
@@ -177,6 +234,14 @@ footer ul li.instagram {
 
   footer ul li {
     margin: 0 30px;
+  }
+
+  .modal {
+    left: 0;
+    width: 100%;
+    padding: 50px 30px;
+    margin: 0;
+    box-sizing: border-box;
   }
 }
 
