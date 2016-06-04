@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <title>My Photo Gallery</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script>
+      $(function() {
+        var $slideshow = $("#slideshow");
+        var $nav = $slideshow.find("ul");
+
+        $nav.on("click", "a", function(e) {
+          e.preventDefault();
+          var $li = $(e.currentTarget).closest("li");
+          var idx = $li.index();
+
+          $slideshow.find("figure").filter(":visible").hide().end().eq(idx).show();
+          // end goes back to the collection of all 4 figures
+
+          $nav.find(".active").removeClass("active");
+          $li.addClass("active");
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <header>
+      <h1>My Photo Gallery</h1>
+    </header>
+    <main>
+      <div id="slideshow">
+        <figure>
+          <img src="https://farm9.staticflickr.com/8210/8215527491_452f1dfdd8_o.jpg">
+          <figcaption>Koyo</figcaption>
+        </figure>
+        <figure>
+          <img src="https://farm9.staticflickr.com/8494/8295532511_6bcc3165c1_o.jpg">
+          <figcaption>Koyo</figcaption>
+        </figure>
+        <figure>
+          <img src="https://farm9.staticflickr.com/8357/8295532179_7e066ec439_o.jpg">
+          <figcaption>Koyo</figcaption>
+        </figure>
+        <figure>
+          <img src="https://farm9.staticflickr.com/8500/8296581730_6019eb8c04_o.jpg">
+          <figcaption>Koyo</figcaption>
+        </figure>
+        <ul>
+          <li class="active"><a href="#"><img src="https://farm9.staticflickr.com/8210/8215527491_452f1dfdd8_o.jpg"></a></li>
+          <li><a href="#"><img src="https://farm9.staticflickr.com/8494/8295532511_6bcc3165c1_o.jpg"></a></li>
+          <li><a href="#"><img src="https://farm9.staticflickr.com/8357/8295532179_7e066ec439_o.jpg"></a></li>
+          <li><a href="#"><img src="https://farm9.staticflickr.com/8500/8296581730_6019eb8c04_o.jpg"></a></li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
