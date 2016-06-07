@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="dynamic_animation.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="dynamic_animation.js"></script>
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="#" id="start">Start</a></li>
+        <li><a href="#" id="stop">Stop</a></li>
+        <li><a href="#" id="controls">Controls</a></li>
+        <li>
+          <form>
+            <fieldset>
+              <div>
+                <select id="shape">
+                  <option value="square">Square</option>
+                  <option value="circle">Circle</option>
+                  <option value="star">Star</option>
+                </select>
+                <label>Starting Point
+                  <input type="number" id="starting_x" placeholder="x:">
+                  <input type="number" id="starting_y" placeholder="y:">
+                </label>
+                <label>Finishing Point
+                  <input type="number" id="finishing_x" placeholder="x:">
+                  <input type="number" id="finishing_y" placeholder="y:">
+                </label>
+                <input type="submit" value="Add">
+              </div>
+            </fieldset>
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <main>
+      <div class="container">
+      </div>
+    </main>
+  </body>
+</html>
