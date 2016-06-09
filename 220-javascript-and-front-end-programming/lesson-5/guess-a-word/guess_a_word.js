@@ -4,6 +4,8 @@ $(function() {
   ];
   var game  = new Game(randomWord()),
       maximum_guesses = 6,
+      $body = $( "body" ),
+      $nav = $( "nav" ),
       $word = $( "#word" ),
       $incorrect_guesses = $( "#incorrect-guesses" );
 
@@ -13,11 +15,19 @@ $(function() {
     this.guessed_letters = [];
     this.correct_letters = 0;
   }
-  Game.prototype.number_of_guesses = 0;
+
+  function randomNumberBetween(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
 
   function randomWord() {
     var random_index = Math.floor(Math.random() * words.length);
-    return words[random_index];
+    return words.splice(random_index, 1)[0];
+  }
+
+  function createDisplay() {
+    createWordDisplay();
+    createApples();
   }
 
   function createWordDisplay() {
@@ -26,20 +36,37 @@ $(function() {
     }
   }
 
+  function createApples() {
+    for (var i = 0; i < maximum_guesses; i++) {
+      var left = randomNumberBetween(25, 72) + "%";
+      var top = randomNumberBetween(15, 65) + "%";
+      var css = "style='top:" + top + "; left:" + left + "'";
+      $( "#tree" ).append( "<div id='apple_" + i + "' class='apple'" + css + "></div>" );
+    }
+  }
+
+  function resetDisplay() {
+    $( ".letter" ).remove();
+    $( ".apple" ).remove();
+    $( ".guessed-letter" ).remove();
+    $body.removeClass( "sunny" );
+    $body.removeClass( "ghosty" );
+    $nav.empty();
+  }
+
   function findIndexes(letter) {
     var result = [];
-    var pos = game.word.indexOf(letter);
-    while (pos !== -1) {
-      result.push(pos);
-      pos = game.word.indexOf(letter, pos + 1);
+    var position = game.word.indexOf(letter);
+    while (position !== -1) {
+      result.push(position);
+      position = game.word.indexOf(letter, position + 1);
     }
     return result;
   }
 
   function insertLetterAt(letter, positions) {
     for (var i = 0; i < positions.length; i++) {
-      var idx = positions[i];
-      $word.find( "div:eq(" + idx + ")" ).html( "<p>" + letter + "</p>" );
+      $word.find( "div:eq(" + positions[i] + ")" ).html( "<p>" + letter + "</p>" );
       game.correct_letters++;
     }
   }
@@ -55,24 +82,44 @@ $(function() {
     }, "slow", "easeOutBounce" );
   }
 
-  function checkGameWon() {
+  function checkGameOver() {
     if (game.correct_letters === game.word.length) {
-      $( "body" ).addClass( "sunny" );
-      $( "nav" ).html( "<a href='index.html'>You win! Play Again</a>" );
-      $(document).unbind( "keypress" );
+      gameWon();
+      gameOver();
+    } else if (game.incorrect_guess_count === maximum_guesses) {
+      gameLost();
+      gameOver();
     }
   }
 
-  function checkGameLost() {
-    if (game.incorrect_guess_count === maximum_guesses) {
-      $( "body" ).addClass( "ghosty" );
-      $( "nav" ).html( "<a href='index.html'>Game Over! Play Again</a>" );
-      $( document ).unbind( "keypress" );
-    }
+  function gameWon() {
+    $body.addClass( "sunny" );
+    $nav.html( "<a href='#' id='again'>You win! Play Again</a>" );
   }
 
+  function gameLost() {
+    $body.addClass( "ghosty" );
+    $nav.html( "<a href='#'>Game Over! Play Again</a>" );
+  }
 
-  $(document).on('keypress', function(e) {
+  function gameOver() {
+    $(document).off('keypress', checkGuess);
+
+    $( "nav a" ).on( "click", function(e) {
+      e.preventDefault();
+      if (words.length !== 0) {
+        game  = new Game(randomWord());
+        resetDisplay();
+        createDisplay();
+        $(document).on('keypress', checkGuess);
+      }
+      else {
+        $nav.html( "No more words left to guess!" );
+      }
+    });
+  }
+
+  function checkGuess(e) {
     var letter_guessed = e.key;
 
     if (letter_guessed.match(/[a-z]/) && !game.guessed_letters.includes(letter_guessed)) {
@@ -81,15 +128,15 @@ $(function() {
       }
       else {
         displayIncorrectLetter(letter_guessed);
-        game.incorrect_guess_count++;
         dropApple();
+        game.incorrect_guess_count++;
       }
       game.guessed_letters.push(letter_guessed);
 
-      checkGameWon();
-      checkGameLost();
+      checkGameOver();
     }
-  });
+  }
 
-  createWordDisplay();
+  createDisplay();
+  $(document).on('keypress', checkGuess);
 });
