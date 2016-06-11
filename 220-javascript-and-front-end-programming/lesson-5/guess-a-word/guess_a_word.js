@@ -40,6 +40,15 @@ Game.prototype = {
     this.resetDisplay();
     this.createWordDisplay();
     this.createApples();
+    this.bind();
+  },
+
+  bind: function() {
+    $(document).on('keypress', this.processGuess.bind(this));
+  },
+
+  unbind: function() {
+    $(document).off('keypress');
   },
 
   createWordDisplay: function() {
@@ -118,13 +127,12 @@ Game.prototype = {
   },
 
   gameOver: function() {
-    $(document).off('keypress', this.processGuess);
+    this.unbind();
 
     $( "nav a" ).on( "click", function(e) {
       e.preventDefault();
       if (words.length !== 0) {
-        game = new Game();
-        $(document).on('keypress', $.proxy(game.processGuess, game));
+        new Game();
       }
       else {
         $nav.html( "No more words left to guess!" );
@@ -142,5 +150,4 @@ Game.prototype = {
   },
 };
 
-var game = new Game();
-$(document).on('keypress', $.proxy(game.processGuess, game));
+new Game();
