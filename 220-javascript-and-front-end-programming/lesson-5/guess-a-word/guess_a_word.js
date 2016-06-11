@@ -65,7 +65,7 @@ Game.prototype = {
   },
 
   processGuess: function(e) {
-    var letter_guessed = e.key;
+    var letter_guessed = String.fromCharCode(e.which);
 
     if (letter_guessed.match(/[a-z]/) && !this.guessed_letters.includes(letter_guessed)) {
       if (this.word.includes(letter_guessed)) {
