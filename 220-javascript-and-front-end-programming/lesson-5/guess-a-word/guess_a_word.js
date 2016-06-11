@@ -67,18 +67,18 @@ Game.prototype = {
   processGuess: function(e) {
     var letter_guessed = e.key;
 
-    if (letter_guessed.match(/[a-z]/) && !game.guessed_letters.includes(letter_guessed)) {
-      if (game.word.includes(letter_guessed)) {
-        game.insertLetterAt(letter_guessed, findIndexes(game.word, letter_guessed));
+    if (letter_guessed.match(/[a-z]/) && !this.guessed_letters.includes(letter_guessed)) {
+      if (this.word.includes(letter_guessed)) {
+        this.insertLetterAt(letter_guessed, findIndexes(this.word, letter_guessed));
       }
       else {
-        game.displayIncorrectLetter(letter_guessed);
-        game.dropApple();
-        game.incorrect_guess_count++;
+        this.displayIncorrectLetter(letter_guessed);
+        this.dropApple();
+        this.incorrect_guess_count++;
       }
-      game.guessed_letters.push(letter_guessed);
+      this.guessed_letters.push(letter_guessed);
 
-      game.checkGameOver();
+      this.checkGameOver();
     }
   },
 
@@ -94,10 +94,10 @@ Game.prototype = {
   },
 
   checkGameOver: function() {
-    if (game.correct_letters === game.word.length) {
+    if (this.correct_letters === this.word.length) {
       this.gameWon();
       this.gameOver();
-    } else if (game.incorrect_guess_count === maximum_guesses) {
+    } else if (this.incorrect_guess_count === maximum_guesses) {
       this.gameLost();
       this.gameOver();
     }
@@ -114,13 +114,13 @@ Game.prototype = {
   },
 
   gameOver: function() {
-    $(document).off('keypress', game.processGuess);
+    $(document).off('keypress', this.processGuess);
 
     $( "nav a" ).on( "click", function(e) {
       e.preventDefault();
       if (words.length !== 0) {
-        game = new Game(randomWord());
-        $(document).on('keypress', game.processGuess);
+        game = new Game();
+        $(document).on('keypress', $.proxy(game.processGuess, game));
       }
       else {
         $nav.html( "No more words left to guess!" );
@@ -139,4 +139,4 @@ Game.prototype = {
 };
 
 var game = new Game();
-$(document).on('keypress', game.processGuess);
+$(document).on('keypress', $.proxy(game.processGuess, game));
