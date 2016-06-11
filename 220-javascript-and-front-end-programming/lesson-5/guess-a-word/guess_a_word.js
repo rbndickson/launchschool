@@ -50,10 +50,14 @@ Game.prototype = {
 
   createApples: function() {
     for (var i = 0; i < maximum_guesses; i++) {
-      var left = randomNumberBetween(25, 72) + "%";
-      var top = randomNumberBetween(15, 65) + "%";
-      var css = "style='top:" + top + "; left:" + left + "'";
-      $( "#tree" ).append( "<div id='apple_" + i + "' class='apple'" + css + "></div>" );
+      $("#tree").append($('<div></div>', {
+        id: 'apple_' + i,
+        class: 'apple',
+        css: {
+          'left': randomNumberBetween(25, 72) + "%",
+          'top':  randomNumberBetween(15, 65) + "%"
+        }
+      }));
     }
   },
 
