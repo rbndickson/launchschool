@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="stylesheets/gallery.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/handlebars-v4.0.5.js"></script>
+    <script type="text/javascript" src="javascripts/gallery.js"></script>
+    <title>Photos</title>
+  </head>
+  <body>
+    <header>
+      <h1>Example's Photos</h1>
+    </header>
+    <main>
+      <div id="slide">
+        <a href="#" class="pager" id="left-pager"></a>
+        <a href="#" class="pager" id="right-pager"></a>
+        <div id="photos">
+        </div>
+      </div>
+      <div id="photo-info">
+      </div>
+      <div id="comments-container">
+      </div>
+      <form action="/comments/new" method="post">
+        <input type="hidden" name="photo_id" value="1">
+        <h4>Your Comment</h4>
+        <label for="name">Name</label>
+        <input type="text" name="name" value="">
+        <label for="email">Email Address</label>
+        <input type="text" name="email" value="">
+        <label for="comment">Comment</label>
+        <textarea name="body" rows="6" cols="40"></textarea>
+        <button type="submit" name="button" class="button-blue">Post Comment</button>
+      </form>
+    </main>
+
+    <script id="photos-template" type="text/x-handlebars-template">
+      {{#each photos}}
+      <figure data-id="{{id}}">
+        <img src="{{src}}">
+        <figcaption>
+          {{caption}}
+        </figcaption>
+      </figure>
+      {{/each}}
+    </script>
+
+    <script id="photo-info-template" type="text/x-handlebars-template">
+      <h2>{{title}}</h2>
+      <div class="buttons">
+        <a href="/photos/like" data-id="{{id}}" class="button button-blue">♡ {{likes}} Likes</a>
+        <a href="/photos/favorite" data-id="{{id}}" class="button button-pink">☆ {{favorites}} Faves</a>
+      </div>
+      <p>
+        Taken on <time>{{created_at}}</time>
+      </p>
+    </script>
+
+    <script id="comments" type="text/x-handlebars-template">
+      <h3>Comments</h3>
+      {{#each comments}}
+      {{> comment}}
+      {{/each}}
+    </script>
+
+    <script id="comment" data-type="partial" type="text/x-handlebars-template">
+      <article>
+        <div class="left-col">
+          <img class="avatar" src="{{gravatar}}">
+        </div>
+        <div class="right-col">
+          <header>
+            <h4>{{name}}</h4>
+            <p>
+              Posted <time>{{date}}</time>
+            </p>
+          </header>
+          <div>
+            {{body}}
+          </div>
+        </div>
+      </article>
+    </script>
+
+  </body>
+</html>
