@@ -1,4 +1,6 @@
 Handlebars.registerPartial( "tag", $( "#tag" ).html());
+
+// posts data
 var posts = [{
   title: "My Second Title",
   published: "16.4.2016",
@@ -12,10 +14,14 @@ var post_data = {
 };
 
 post_data.tags = ["Coding", "Travel", "Music"];
+// add paragrapgh tags to body
 post_data.body = "<p>" + post_data.body + "</p>";
 
+// add single post to post array
 posts.push(post_data);
 
+// create posts template
 var posts_template = Handlebars.compile($( "#post-template" ).html());
 
+// append the result of running the posts array through the template
 $( "#posts" ).append(posts_template({ posts: posts }));
