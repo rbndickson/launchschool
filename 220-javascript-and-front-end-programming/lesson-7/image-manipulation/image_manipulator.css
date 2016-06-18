@@ -1,0 +1,28 @@
+.container {
+  width: 800px;
+  margin: 0 auto;
+}
+
+.col-left,
+.col-right {
+  float: left;
+}
+.col-left {
+  width: 390px;
+  margin-right: 10px;
+}
+.col-right {
+  width: 390px;
+  margin-left: 10px;
+}
+
+img {
+  display: block;
+  max-height: 300px;
+  max-width: 390px;
+  margin: 20px 0;
+}
+
+canvas {
+  margin: 20px 0;  
+}
